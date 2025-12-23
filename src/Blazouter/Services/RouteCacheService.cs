@@ -1,6 +1,6 @@
-using System.Collections.Concurrent;
 using Blazouter.Interfaces;
 using Blazouter.Models;
+using System.Collections.Concurrent;
 
 namespace Blazouter.Services
 {

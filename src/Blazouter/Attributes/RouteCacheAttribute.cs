@@ -63,17 +63,18 @@ namespace Blazouter.Attributes
     /// </remarks>
     /// <param name="enableCache">
     /// Whether to enable caching for this route.
-    /// true = always cache, false = never cache, null = use global settings.
+    /// true = always cache, false = never cache.
+    /// To use global settings, simply do not apply this attribute.
     /// </param>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public sealed class RouteCacheAttribute(bool? enableCache = true) : Attribute
+    public sealed class RouteCacheAttribute(bool enableCache) : Attribute
     {
         /// <summary>
         /// Gets a value indicating whether caching is enabled for this route.
         /// </summary>
         /// <value>
-        /// true to always cache this route; false to never cache; null to use global cache settings.
+        /// true to always cache this route; false to never cache.
         /// </value>
-        public bool? EnableCache { get; } = enableCache;
+        public bool EnableCache { get; } = enableCache;
     }
 }

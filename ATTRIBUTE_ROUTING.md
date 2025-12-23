@@ -216,7 +216,7 @@ public partial class StaticPage : ComponentBase
 
 **Parameters:**
 
--   `enableCache` (bool?) - Whether to cache this route. `true` = always cache, `false` = never cache, `null` = use global settings (default)
+-   `enableCache` (bool) - Whether to cache this route. `true` = always cache, `false` = never cache. To use global settings, omit the attribute.
 
 **Note:** This affects route match caching. For more information about caching, see [CACHING.md](CACHING.md).
 

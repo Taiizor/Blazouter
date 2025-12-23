@@ -26,7 +26,7 @@ export * from './clipboard.js';
  * Main Blazouter interop namespace
  */
 export const Blazouter = {
-    version: '1.0.12',
+    version: '1.0.13',
     
     /**
      * Initializes Blazouter JavaScript interop

@@ -7,14 +7,14 @@ namespace Blazouter.WebAssembly.Sample.Layouts
         // Features dropdown pages
         private static readonly string[] FeaturesPages = new[]
         {
-        "/navigation", "/transitions", "/cache", "/middleware", "/typescript", "/attribute-examples"
-    };
+            "/navigation", "/transitions", "/cache", "/middleware", "/typescript", "/attribute-examples"
+        };
 
         // Examples dropdown pages
         private static readonly string[] ExamplesPages = new[]
         {
-        "/users", "/protected", "/lazy", "/error-example"
-    };
+            "/users", "/protected", "/lazy", "/error-example"
+        };
 
         private void ToggleMobileMenu()
         {

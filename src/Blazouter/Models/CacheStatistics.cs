@@ -42,7 +42,7 @@ namespace Blazouter.Models
         /// A value between 0 and 100 representing the percentage of successful cache hits.
         /// Returns 0 if no requests have been made.
         /// </value>
-        public double HitRate => TotalRequests > 0 ? (CacheHits / (double)TotalRequests) * 100 : 0;
+        public double HitRate => TotalRequests > 0 ? CacheHits / (double)TotalRequests * 100 : 0;
 
         /// <summary>
         /// Gets or sets the number of cached route matches currently in memory.

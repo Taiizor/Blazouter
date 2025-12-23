@@ -33,7 +33,7 @@ namespace Blazouter.Extensions
         public static string GetFormattedStatistics(this IRouteCacheService cacheService)
         {
             CacheStatistics stats = cacheService.GetStatistics();
-            
+
             return $@"Cache Statistics:
   Total Requests: {stats.TotalRequests:N0}
   Cache Hits: {stats.CacheHits:N0}

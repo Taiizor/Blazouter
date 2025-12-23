@@ -215,7 +215,7 @@ namespace Blazouter.Services
         {
             _routeMatchCache.Clear();
             _componentTypeCache.Clear();
-            
+
             // Clear the insertion order queue
             while (_componentTypeInsertionOrder.TryDequeue(out _))
             {

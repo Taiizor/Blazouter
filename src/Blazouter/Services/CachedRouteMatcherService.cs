@@ -91,7 +91,7 @@ namespace Blazouter.Services
                 // Check if this specific route allows caching
                 // null means use global settings (cache), false means never cache, true means always cache
                 bool shouldCache = match.Route?.EnableCache ?? true;
-                
+
                 if (shouldCache)
                 {
                     _cacheService.CacheRouteMatch(path, match);

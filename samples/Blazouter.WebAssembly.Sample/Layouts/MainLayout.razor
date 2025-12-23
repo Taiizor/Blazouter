@@ -1,91 +1,218 @@
 ﻿@inherits LayoutComponentBase
 
 @inject RouterNavigationService NavService
+@inject RouterStateService RouterState
 
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
 	<!-- Navigation -->
 	<nav class="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex justify-between h-16">
-				<div class="flex items-center space-x-8">
-					<!-- Logo -->
-					<div class="flex-shrink-0 flex items-center">
-						<span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-							Blazouter
+				<!-- Logo (Left) -->
+				<div class="flex-shrink-0 flex items-center">
+					<span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+						Blazouter
+					</span>
+				</div>
+
+				<!-- Desktop Navigation Links (Center) -->
+				<div class="hidden lg:flex flex-1 items-center justify-center space-x-1">
+					<!-- Primary Links -->
+					<RouterLink Href="/" Exact="true" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
+						<span class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+							Home
 						</span>
+					</RouterLink>
+					<RouterLink Href="/about" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
+						<span class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+							About
+						</span>
+					</RouterLink>
+
+					<!-- Features Dropdown -->
+					<div class="relative group">
+						<button class="@GetFeaturesDropdownClass()">
+							Features
+							<svg class="ml-1 w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</button>
+						<div class="absolute left-1/2 -translate-x-1/2 mt-0 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+							<div class="pt-2">
+								<div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2">
+									<RouterLink Href="/navigation" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											🧭 Navigation
+										</span>
+									</RouterLink>
+									<RouterLink Href="/transitions" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											✨ Transitions
+										</span>
+									</RouterLink>
+									<RouterLink Href="/cache" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											⚡ Cache
+										</span>
+									</RouterLink>
+									<RouterLink Href="/middleware" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											🔗 Middleware
+										</span>
+									</RouterLink>
+									<RouterLink Href="/typescript" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											📘 TypeScript
+										</span>
+									</RouterLink>
+									<RouterLink Href="/attribute-examples" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											🏷️ Attribute Routing
+										</span>
+									</RouterLink>
+								</div>
+							</div>
+						</div>
 					</div>
 
-					<!-- Navigation Links -->
-					<div class="hidden md:flex space-x-4">
-						<RouterLink Href="/" Exact="true" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Home
-							</span>
-						</RouterLink>
-						<RouterLink Href="/about" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								About
-							</span>
-						</RouterLink>
-						<RouterLink Href="/navigation" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Navigation
-							</span>
-						</RouterLink>
-						<RouterLink Href="/transitions" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Transitions
-							</span>
-						</RouterLink>
-						<RouterLink Href="/users" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Users
-							</span>
-						</RouterLink>
-						<RouterLink Href="/cache" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Cache
-							</span>
-						</RouterLink>
-						<RouterLink Href="/protected" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Protected
-							</span>
-						</RouterLink>
-						<RouterLink Href="/lazy" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Lazy Load
-							</span>
-						</RouterLink>
-						<RouterLink Href="/typescript" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								TypeScript
-							</span>
-						</RouterLink>
-						<RouterLink Href="/middleware" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Middleware
-							</span>
-						</RouterLink>
-						<RouterLink Href="/error-example" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Error Example
-							</span>
-						</RouterLink>
-						<RouterLink Href="/attribute-examples" ActiveClass="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400">
-							<span class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-								Attribute Routing
-							</span>
-						</RouterLink>
+					<!-- Examples Dropdown -->
+					<div class="relative group">
+						<button class="@GetExamplesDropdownClass()">
+							Examples
+							<svg class="ml-1 w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</button>
+						<div class="absolute left-1/2 -translate-x-1/2 mt-0 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+							<div class="pt-2">
+								<div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2">
+									<RouterLink Href="/users" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											👥 Users
+										</span>
+									</RouterLink>
+									<RouterLink Href="/protected" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											🔒 Protected
+										</span>
+									</RouterLink>
+									<RouterLink Href="/lazy" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											⏳ Lazy Load
+										</span>
+									</RouterLink>
+									<RouterLink Href="/error-example" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+										<span class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+											⚠️ Error Example
+										</span>
+									</RouterLink>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				<!-- Theme Switcher -->
-				<div class="flex items-center">
+				<!-- Right side: Theme Switcher + Mobile Menu Button -->
+				<div class="flex items-center space-x-2">
 					<ThemeSwitcher />
+
+					<!-- Mobile menu button -->
+					<button @onclick="ToggleMobileMenu"
+							class="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none transition-colors">
+						<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							@if (_isMobileMenuOpen)
+							{
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+							}
+							else
+							{
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+							}
+						</svg>
+					</button>
 				</div>
 			</div>
 		</div>
+
+		<!-- Mobile Menu -->
+		@if (_isMobileMenuOpen)
+		{
+			<div class="lg:hidden border-t border-gray-200 dark:border-gray-700">
+				<div class="px-4 py-3 space-y-1">
+					<!-- Primary Links -->
+					<RouterLink Href="/" Exact="true" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							🏠 Home
+						</span>
+					</RouterLink>
+					<RouterLink Href="/about" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							ℹ️ About
+						</span>
+					</RouterLink>
+
+					<!-- Features Section -->
+					<div class="pt-2 pb-1">
+						<span class="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Features</span>
+					</div>
+					<RouterLink Href="/navigation" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							🧭 Navigation
+						</span>
+					</RouterLink>
+					<RouterLink Href="/transitions" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							✨ Transitions
+						</span>
+					</RouterLink>
+					<RouterLink Href="/cache" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							⚡ Cache
+						</span>
+					</RouterLink>
+					<RouterLink Href="/middleware" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							🔗 Middleware
+						</span>
+					</RouterLink>
+					<RouterLink Href="/typescript" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							📘 TypeScript
+						</span>
+					</RouterLink>
+					<RouterLink Href="/attribute-examples" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							🏷️ Attribute Routing
+						</span>
+					</RouterLink>
+
+					<!-- Examples Section -->
+					<div class="pt-2 pb-1">
+						<span class="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Examples</span>
+					</div>
+					<RouterLink Href="/users" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							👥 Users
+						</span>
+					</RouterLink>
+					<RouterLink Href="/protected" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							🔒 Protected
+						</span>
+					</RouterLink>
+					<RouterLink Href="/lazy" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							⏳ Lazy Load
+						</span>
+					</RouterLink>
+					<RouterLink Href="/error-example" ActiveClass="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+						<span @onclick="CloseMobileMenu" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+							⚠️ Error Example
+						</span>
+					</RouterLink>
+				</div>
+			</div>
+		}
 	</nav>
 
 	<!-- Main Content -->

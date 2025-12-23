@@ -61,7 +61,11 @@ namespace Blazouter.Extensions
         {
             services.AddSingleton<RouterStateService>();
             services.AddScoped<RouterNavigationService>();
-            services.AddSingleton<IRouteMatcherService, RouteMatcherService>();
+
+            // Add caching with default options
+            services.AddSingleton(new CacheOptions());
+            services.AddSingleton<IRouteCacheService, RouteCacheService>();
+            services.AddSingleton<IRouteMatcherService, CachedRouteMatcherService>();
 
             return services;
         }
@@ -131,6 +135,71 @@ namespace Blazouter.Extensions
         public static IServiceCollection AddBlazouterErrorHandler<THandler>(this IServiceCollection services) where THandler : class, IRouterErrorHandler
         {
             services.AddScoped<IRouterErrorHandler, THandler>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds Blazouter services with custom cache configuration.
+        /// </summary>
+        /// <param name="services">The service collection to add Blazouter services to.</param>
+        /// <param name="configureOptions">An action to configure cache options.</param>
+        /// <returns>
+        /// The same service collection so that multiple calls can be chained.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This method allows customization of caching behavior including:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Cache size limits for route matches and component types</description></item>
+        /// <item><description>Time-to-live (TTL) settings for cached entries</description></item>
+        /// <item><description>Enabling/disabling specific cache features</description></item>
+        /// <item><description>Statistics tracking for monitoring cache performance</description></item>
+        /// </list>
+        /// <para>
+        /// Cache configuration affects performance and memory usage. Default settings are
+        /// optimized for typical applications, but you may need to adjust them based on
+        /// your specific routing patterns and memory constraints.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// Configure caching with custom settings:
+        /// <code>
+        /// builder.Services.AddBlazouter(options =>
+        /// {
+        ///     // Increase cache size for applications with many routes
+        ///     options.MaxRouteMatchCacheSize = 200;
+        ///     
+        ///     // Enable statistics tracking for monitoring
+        ///     options.EnableStatistics = true;
+        ///     
+        ///     // Set TTL for development scenarios with changing routes
+        ///     options.RouteMatchCacheTTLSeconds = 300; // 5 minutes
+        /// });
+        /// 
+        /// // Disable caching entirely (useful for debugging)
+        /// builder.Services.AddBlazouter(options =>
+        /// {
+        ///     options.EnableRouteMatchCache = false;
+        ///     options.EnableComponentTypeCache = false;
+        /// });
+        /// </code>
+        /// </example>
+        /// <seealso cref="CacheOptions"/>
+        /// <seealso cref="IRouteCacheService"/>
+        public static IServiceCollection AddBlazouter(this IServiceCollection services, Action<CacheOptions> configureOptions)
+        {
+            CacheOptions options = new();
+            configureOptions?.Invoke(options);
+
+            services.AddSingleton<RouterStateService>();
+            services.AddScoped<RouterNavigationService>();
+
+            // Add caching with custom options
+            services.AddSingleton(options);
+            services.AddSingleton<IRouteCacheService, RouteCacheService>();
+            services.AddSingleton<IRouteMatcherService, CachedRouteMatcherService>();
 
             return services;
         }

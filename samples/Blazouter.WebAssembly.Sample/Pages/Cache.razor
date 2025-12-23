@@ -1,0 +1,223 @@
+<div class="container mx-auto px-4 py-8">
+	<div class="max-w-4xl mx-auto">
+		<h1 class="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Advanced Caching Demo</h1>
+		<p class="text-gray-600 dark:text-gray-400 mb-8">
+			This page demonstrates Blazouter's advanced caching features including route match caching,
+			component type caching, and performance monitoring.
+		</p>
+
+		<!-- Cache Statistics Card -->
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+			<h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">📊 Cache Statistics</h2>
+
+			@if (_stats != null)
+			{
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+					<div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded">
+						<div class="text-sm text-blue-600 dark:text-blue-400 font-medium">Total Requests</div>
+						<div class="text-2xl font-bold text-blue-900 dark:text-blue-200">@_stats.TotalRequests.ToString("N0")</div>
+					</div>
+
+					<div class="bg-green-50 dark:bg-green-900/20 p-4 rounded">
+						<div class="text-sm text-green-600 dark:text-green-400 font-medium">Cache Hits</div>
+						<div class="text-2xl font-bold text-green-900 dark:text-green-200">@_stats.CacheHits.ToString("N0")</div>
+					</div>
+
+					<div class="bg-red-50 dark:bg-red-900/20 p-4 rounded">
+						<div class="text-sm text-red-600 dark:text-red-400 font-medium">Cache Misses</div>
+						<div class="text-2xl font-bold text-red-900 dark:text-red-200">@_stats.CacheMisses.ToString("N0")</div>
+					</div>
+
+					<div class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded">
+						<div class="text-sm text-purple-600 dark:text-purple-400 font-medium">Hit Rate</div>
+						<div class="text-2xl font-bold text-purple-900 dark:text-purple-200">@_stats.HitRate.ToString("F2")%</div>
+					</div>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div class="bg-gray-50 dark:bg-gray-700 p-4 rounded">
+						<div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Route Cache Size</div>
+						<div class="text-xl font-bold text-gray-900 dark:text-white">@_stats.RouteMatchCacheSize entries</div>
+					</div>
+
+					<div class="bg-gray-50 dark:bg-gray-700 p-4 rounded">
+						<div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Component Cache Size</div>
+						<div class="text-xl font-bold text-gray-900 dark:text-white">@_stats.ComponentTypeCacheSize entries</div>
+					</div>
+				</div>
+			}
+			else
+			{
+				<div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded">
+					<p class="text-yellow-800 dark:text-yellow-200">
+						⚠️ Statistics tracking is not enabled. To enable statistics, configure caching with:
+					</p>
+					<pre class="mt-2 bg-gray-900 text-white p-4 rounded text-sm overflow-x-auto">
+	builder.Services.AddBlazouter(options => 
+	{
+	    options.EnableStatistics = true;
+	});</pre>
+				</div>
+			}
+
+			<div class="mt-4 flex gap-2">
+				<button @onclick="RefreshStats"
+						class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer">
+					🔄 Refresh Stats
+				</button>
+				<button @onclick="ClearCache"
+						class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer">
+					🗑️ Clear Cache
+				</button>
+			</div>
+		</div>
+
+		<!-- Formatted Statistics Card -->
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+			<h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">📝 Formatted Statistics</h2>
+			<div class="bg-gray-900 text-white p-4 rounded font-mono text-sm whitespace-pre overflow-x-auto">@_formattedStats</div>
+		</div>
+
+		<!-- How It Works Section -->
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+			<h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">🔍 How Caching Works</h2>
+
+			<div class="space-y-4">
+				<div class="border-l-4 border-blue-500 pl-4">
+					<h3 class="font-semibold text-gray-900 dark:text-white mb-2">Route Match Caching</h3>
+					<p class="text-gray-600 dark:text-gray-400">
+						When you navigate to a route, Blazouter caches the route match result.
+						Subsequent navigations to the same route are 10-50x faster because they're
+						retrieved from cache instead of performing route matching again.
+					</p>
+				</div>
+
+				<div class="border-l-4 border-green-500 pl-4">
+					<h3 class="font-semibold text-gray-900 dark:text-white mb-2">Component Type Caching</h3>
+					<p class="text-gray-600 dark:text-gray-400">
+						Lazy-loaded components (using ComponentLoader) are cached after first load.
+						Try navigating to the "Lazy Loaded Page" - the first visit simulates a 1-second load,
+						but subsequent visits are instant thanks to caching.
+					</p>
+				</div>
+
+				<div class="border-l-4 border-purple-500 pl-4">
+					<h3 class="font-semibold text-gray-900 dark:text-white mb-2">LRU & FIFO Eviction</h3>
+					<p class="text-gray-600 dark:text-gray-400">
+						Route matches use LRU (Least Recently Used) eviction, while component types use
+						FIFO (First In First Out). Both have configurable size limits to prevent unbounded
+						memory growth.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Test Cache Performance -->
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+			<h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">⚡ Test Cache Performance</h2>
+			<p class="text-gray-600 dark:text-gray-400 mb-4">
+				Navigate between different pages to see the cache in action. The statistics above will update
+				as you navigate, showing cache hits increasing.
+			</p>
+
+			<div class="mb-4 bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded">
+				<p class="text-yellow-800 dark:text-yellow-200 mb-2">
+					<strong>💡 Per-Route Caching:</strong> Some routes have caching disabled!
+				</p>
+				<ul class="list-disc list-inside text-yellow-700 dark:text-yellow-300 text-sm space-y-1">
+					<li><strong>Middleware</strong> and <strong>Error Example</strong> pages have <code class="bg-yellow-200 dark:bg-yellow-800 px-1 rounded">EnableCache = false</code></li>
+					<li>These routes will never be cached, even with global caching enabled</li>
+					<li>Navigate to them multiple times - they won't show in cache statistics</li>
+					<li>All other routes use default caching behavior</li>
+				</ul>
+			</div>
+
+			<div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+				<button @onclick='@(() => NavService.NavigateTo("/"))' class="px-4 py-2 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition cursor-pointer">
+					✅ Home (Cached)
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/about"))' class="px-4 py-2 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition cursor-pointer">
+					✅ About (Cached)
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/navigation"))' class="px-4 py-2 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition cursor-pointer">
+					✅ Navigation (Cached)
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/transitions"))' class="px-4 py-2 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition cursor-pointer">
+					✅ Transitions (Cached)
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/lazy"))' class="px-4 py-2 bg-green-500 text-white rounded text-center hover:bg-green-600 transition cursor-pointer">
+					✅ Lazy Load (Cached)
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/cache"))' class="px-4 py-2 bg-purple-500 text-white rounded text-center hover:bg-purple-600 transition cursor-pointer">
+					✅ Cache (Cached)
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/middleware"))' class="px-4 py-2 bg-red-500 text-white rounded text-center hover:bg-red-600 transition cursor-pointer">
+					❌ Middleware (Not Cached)
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/error-example"))' class="px-4 py-2 bg-red-500 text-white rounded text-center hover:bg-red-600 transition cursor-pointer">
+					❌ Error Example (Not Cached)
+				</button>
+			</div>
+		</div>
+
+		<!-- Configuration Example -->
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+			<h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">⚙️ Configuration Examples</h2>
+
+			<div class="space-y-4">
+				<div>
+					<h3 class="font-semibold text-gray-900 dark:text-white mb-2">Default Configuration (Automatic)</h3>
+					<pre class="bg-gray-900 text-white p-4 rounded text-sm overflow-x-auto">
+// Caching is enabled by default with sensible defaults
+builder.Services.AddBlazouter();</pre>
+				</div>
+
+				<div>
+					<h3 class="font-semibold text-gray-900 dark:text-white mb-2">Custom Global Configuration</h3>
+					<pre class="bg-gray-900 text-white p-4 rounded text-sm overflow-x-auto">
+builder.Services.AddBlazouter(options =>
+{
+    // Increase cache sizes
+    options.MaxRouteMatchCacheSize = 200;
+    options.MaxComponentTypeCacheSize = 100;
+    
+    // Enable statistics tracking
+    options.EnableStatistics = true;
+    
+    // Set TTL for development scenarios
+    options.RouteMatchCacheTTLSeconds = 300; // 5 minutes
+    
+    // Disable specific caches if needed
+    options.EnableRouteMatchCache = true;
+    options.EnableComponentTypeCache = true;
+});</pre>
+				</div>
+
+				<div>
+					<h3 class="font-semibold text-gray-900 dark:text-white mb-2">⭐ NEW: Per-Route Cache Control</h3>
+					<pre class="bg-gray-900 text-white p-4 rounded text-sm overflow-x-auto">
+new RouteConfig
+{
+    Path = "/admin/dashboard",
+    Component = typeof(AdminDashboard),
+    EnableCache = false  // ❌ Never cache this route
+}
+
+new RouteConfig
+{
+    Path = "/static-page",
+    Component = typeof(StaticPage),
+    EnableCache = true   // ✅ Always cache this route
+}
+
+new RouteConfig
+{
+    Path = "/default",
+    Component = typeof(DefaultPage),
+    EnableCache = null   // 🔄 Use global cache settings (default)
+}</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

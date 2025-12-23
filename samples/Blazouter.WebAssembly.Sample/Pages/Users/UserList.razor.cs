@@ -66,7 +66,7 @@ namespace Blazouter.WebAssembly.Sample.Pages.Users
             }
             else
             {
-                _queryInfo = "No query parameters set.";
+                _queryInfo = string.Empty;
             }
 
             // Apply sorting

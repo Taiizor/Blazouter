@@ -1,4 +1,4 @@
-/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -12,6 +12,7 @@
     --color-red-200: oklch(88.5% 0.062 18.334);
     --color-red-300: oklch(80.8% 0.114 19.571);
     --color-red-400: oklch(70.4% 0.191 22.216);
+    --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-red-800: oklch(44.4% 0.177 26.899);
@@ -348,6 +349,24 @@
   }
   .z-50 {
     z-index: 50;
+  }
+  .container {
+    width: 100%;
+    @media (width >= 40rem) {
+      max-width: 40rem;
+    }
+    @media (width >= 48rem) {
+      max-width: 48rem;
+    }
+    @media (width >= 64rem) {
+      max-width: 64rem;
+    }
+    @media (width >= 80rem) {
+      max-width: 80rem;
+    }
+    @media (width >= 96rem) {
+      max-width: 96rem;
+    }
   }
   .mx-auto {
     margin-inline: auto;
@@ -1122,11 +1141,18 @@
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 2px;
   }
+  .border-l-4 {
+    border-left-style: var(--tw-border-style);
+    border-left-width: 4px;
+  }
   .border-amber-200 {
     border-color: var(--color-amber-200);
   }
   .border-blue-200 {
     border-color: var(--color-blue-200);
+  }
+  .border-blue-500 {
+    border-color: var(--color-blue-500);
   }
   .border-blue-600 {
     border-color: var(--color-blue-600);
@@ -1146,6 +1172,9 @@
   .border-green-200 {
     border-color: var(--color-green-200);
   }
+  .border-green-500 {
+    border-color: var(--color-green-500);
+  }
   .border-indigo-200 {
     border-color: var(--color-indigo-200);
   }
@@ -1157,6 +1186,9 @@
   }
   .border-purple-200 {
     border-color: var(--color-purple-200);
+  }
+  .border-purple-500 {
+    border-color: var(--color-purple-500);
   }
   .border-red-200 {
     border-color: var(--color-red-200);
@@ -1178,6 +1210,9 @@
   }
   .bg-blue-100 {
     background-color: var(--color-blue-100);
+  }
+  .bg-blue-500 {
+    background-color: var(--color-blue-500);
   }
   .bg-blue-600 {
     background-color: var(--color-blue-600);
@@ -1218,6 +1253,9 @@
   .bg-green-100 {
     background-color: var(--color-green-100);
   }
+  .bg-green-500 {
+    background-color: var(--color-green-500);
+  }
   .bg-green-600 {
     background-color: var(--color-green-600);
   }
@@ -1236,11 +1274,17 @@
   .bg-purple-100 {
     background-color: var(--color-purple-100);
   }
+  .bg-purple-500 {
+    background-color: var(--color-purple-500);
+  }
   .bg-purple-600 {
     background-color: var(--color-purple-600);
   }
   .bg-red-50 {
     background-color: var(--color-red-50);
+  }
+  .bg-red-500 {
+    background-color: var(--color-red-500);
   }
   .bg-red-600 {
     background-color: var(--color-red-600);
@@ -1271,6 +1315,9 @@
   }
   .bg-yellow-100 {
     background-color: var(--color-yellow-100);
+  }
+  .bg-yellow-200 {
+    background-color: var(--color-yellow-200);
   }
   .bg-yellow-500 {
     background-color: var(--color-yellow-500);
@@ -1443,6 +1490,9 @@
   .pt-6 {
     padding-top: calc(var(--spacing) * 6);
   }
+  .pl-4 {
+    padding-left: calc(var(--spacing) * 4);
+  }
   .text-center {
     text-align: center;
   }
@@ -1505,6 +1555,9 @@
   }
   .whitespace-nowrap {
     white-space: nowrap;
+  }
+  .whitespace-pre {
+    white-space: pre;
   }
   .text-amber-700 {
     color: var(--color-amber-700);
@@ -1703,6 +1756,13 @@
       }
     }
   }
+  .hover\:bg-blue-600 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-blue-600);
+      }
+    }
+  }
   .hover\:bg-blue-700 {
     &:hover {
       @media (hover: hover) {
@@ -1752,6 +1812,13 @@
       }
     }
   }
+  .hover\:bg-green-600 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-green-600);
+      }
+    }
+  }
   .hover\:bg-green-700 {
     &:hover {
       @media (hover: hover) {
@@ -1773,10 +1840,24 @@
       }
     }
   }
+  .hover\:bg-purple-600 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-purple-600);
+      }
+    }
+  }
   .hover\:bg-purple-700 {
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-purple-700);
+      }
+    }
+  }
+  .hover\:bg-red-600 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-red-600);
       }
     }
   }
@@ -2253,6 +2334,11 @@
       @supports (color: color-mix(in lab, red, red)) {
         background-color: color-mix(in oklab, var(--color-red-900) 20%, transparent);
       }
+    }
+  }
+  .dark\:bg-yellow-800 {
+    &:is(.dark *) {
+      background-color: var(--color-yellow-800);
     }
   }
   .dark\:bg-yellow-800\/50 {
@@ -2934,7 +3020,7 @@ code {
   color: #c02d76;
 }
 @layer base {
-  [type='text'],input:where(:not([type])),[type='email'],[type='url'],[type='password'],[type='number'],[type='date'],[type='datetime-local'],[type='month'],[type='search'],[type='tel'],[type='time'],[type='week'],[multiple],textarea,select {
+  input:where([type='text']),input:where(:not([type])),input:where([type='email']),input:where([type='url']),input:where([type='password']),input:where([type='number']),input:where([type='date']),input:where([type='datetime-local']),input:where([type='month']),input:where([type='search']),input:where([type='tel']),input:where([type='time']),input:where([type='week']),select:where([multiple]),textarea,select {
     appearance: none;
     background-color: #fff;
     border-color: oklch(55.1% 0.027 264.364);
@@ -2988,7 +3074,7 @@ code {
     padding-right: 2.5rem;
     print-color-adjust: exact;
   }
-  [multiple],[size]:where(select:not([size="1"])) {
+  select:where([multiple]),select:where([size]:not([size="1"])) {
     background-image: initial;
     background-position: initial;
     background-repeat: unset;
@@ -2996,7 +3082,7 @@ code {
     padding-right: 0.75rem;
     print-color-adjust: unset;
   }
-  [type='checkbox'],[type='radio'] {
+  input:where([type='checkbox']),input:where([type='radio']) {
     appearance: none;
     padding: 0;
     print-color-adjust: exact;
@@ -3013,13 +3099,13 @@ code {
     border-width: 1px;
     --tw-shadow: 0 0 #0000;
   }
-  [type='checkbox'] {
+  input:where([type='checkbox']) {
     border-radius: 0px;
   }
-  [type='radio'] {
+  input:where([type='radio']) {
     border-radius: 100%;
   }
-  [type='checkbox']:focus,[type='radio']:focus {
+  input:where([type='checkbox']):focus,input:where([type='radio']):focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
     --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
@@ -3030,30 +3116,30 @@ code {
     --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
     box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
-  [type='checkbox']:checked,[type='radio']:checked {
+  input:where([type='checkbox']):checked,input:where([type='radio']):checked {
     border-color: transparent;
     background-color: currentColor;
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
   }
-  [type='checkbox']:checked {
+  input:where([type='checkbox']):checked {
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
     @media (forced-colors: active) {
       appearance: auto;
     }
   }
-  [type='radio']:checked {
+  input:where([type='radio']):checked {
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
     @media (forced-colors: active) {
       appearance: auto;
     }
   }
-  [type='checkbox']:checked:hover,[type='checkbox']:checked:focus,[type='radio']:checked:hover,[type='radio']:checked:focus {
+  input:where([type='checkbox']):checked:hover,input:where([type='checkbox']):checked:focus,input:where([type='radio']):checked:hover,input:where([type='radio']):checked:focus {
     border-color: transparent;
     background-color: currentColor;
   }
-  [type='checkbox']:indeterminate {
+  input:where([type='checkbox']):indeterminate {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
     border-color: transparent;
     background-color: currentColor;
@@ -3064,11 +3150,11 @@ code {
       appearance: auto;
     }
   }
-  [type='checkbox']:indeterminate:hover,[type='checkbox']:indeterminate:focus {
+  input:where([type='checkbox']):indeterminate:hover,input:where([type='checkbox']):indeterminate:focus {
     border-color: transparent;
     background-color: currentColor;
   }
-  [type='file'] {
+  input:where([type='file']) {
     background: unset;
     border-color: inherit;
     border-width: 0;
@@ -3077,7 +3163,7 @@ code {
     font-size: unset;
     line-height: inherit;
   }
-  [type='file']:focus {
+  input:where([type='file']):focus {
     outline: 1px solid ButtonText;
     outline: 1px auto -webkit-focus-ring-color;
   }

@@ -542,7 +542,7 @@ namespace Blazouter.Components
 
                 try
                 {
-                    matchToLoad.ComponentType = await matchToLoad.Route.ComponentLoader!();
+                    await LoadComponentWithCacheAsync(matchToLoad);
                 }
                 catch (Exception ex)
                 {
@@ -987,6 +987,49 @@ namespace Blazouter.Components
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Loads a component with caching support for lazy-loaded components.
+        /// </summary>
+        /// <param name="matchToLoad">The route match containing the component to load.</param>
+        /// <returns>A task representing the asynchronous component loading operation.</returns>
+        /// <remarks>
+        /// <para>
+        /// This method implements a caching strategy for lazy-loaded components:
+        /// </para>
+        /// <list type="number">
+        /// <item><description>First checks the component type cache for a previously loaded component</description></item>
+        /// <item><description>If found (cache hit), uses the cached type immediately without invoking ComponentLoader</description></item>
+        /// <item><description>If not found (cache miss), invokes the ComponentLoader to load the component asynchronously</description></item>
+        /// <item><description>After successful loading, stores the component type in cache for future use</description></item>
+        /// </list>
+        /// <para>
+        /// The caching behavior is controlled by the EnableComponentTypeCache option in CacheOptions.
+        /// When disabled, the cache always returns null and components are loaded on every navigation.
+        /// </para>
+        /// </remarks>
+        private async Task LoadComponentWithCacheAsync(RouteMatch matchToLoad)
+        {
+            // Check cache first before loading component
+            Type? cachedComponentType = CacheService.GetCachedComponentType(matchToLoad.Route.Path);
+
+            if (cachedComponentType != null)
+            {
+                // Cache hit - use cached component type (instant!)
+                matchToLoad.ComponentType = cachedComponentType;
+            }
+            else
+            {
+                // Cache miss - load component using ComponentLoader
+                matchToLoad.ComponentType = await matchToLoad.Route.ComponentLoader!();
+
+                // Cache the loaded component type for future use
+                if (matchToLoad.ComponentType != null)
+                {
+                    CacheService.CacheComponentType(matchToLoad.Route.Path, matchToLoad.ComponentType);
+                }
+            }
         }
 
         /// <summary>

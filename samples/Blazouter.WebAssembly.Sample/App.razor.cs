@@ -71,6 +71,14 @@ namespace Blazouter.WebAssembly.Sample
                 Transition = RouteTransition.Rotate
             },
             new() {
+                Path = "/cache",
+                Component = typeof(Cache),
+                Title = "Cache Page",
+                Transition = RouteTransition.Fade,
+                // Cache page itself uses caching (default behavior)
+                EnableCache = null  // null means use global settings
+            },
+            new() {
                 Path = "/lazy",
                 ComponentLoader = async () =>
                 {
@@ -95,13 +103,17 @@ namespace Blazouter.WebAssembly.Sample
                     typeof(LoggingMiddleware),
                     typeof(AnalyticsMiddleware)
                 ],
-                Transition = RouteTransition.Slide
+                Transition = RouteTransition.Slide,
+                // Disable caching for this route to always execute middleware fresh
+                EnableCache = false
             },
             new() {
                 Path = "/error-example",
                 Component = typeof(ErrorExample),
                 Title = "Error Example",
-                Transition = RouteTransition.Spotlight
+                Transition = RouteTransition.Spotlight,
+                // Disable caching for error example to test errors each time
+                EnableCache = false
             },
             new() {
                 Path = "/test-error",

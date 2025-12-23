@@ -332,5 +332,55 @@ namespace Blazouter.Models
         /// Gets a value indicating whether the Layout property was explicitly set (even if set to null).
         /// </summary>
         internal bool HasExplicitLayout { get; private set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether caching is enabled for this specific route.
+        /// </summary>
+        /// <value>
+        /// true to enable caching for this route; false to disable; null to use global cache settings. Defaults to null.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// This property allows fine-grained control over caching on a per-route basis. When set to null (default),
+        /// the global cache settings from CacheOptions are used. When explicitly set to true or false, it overrides
+        /// the global settings for this specific route.
+        /// </para>
+        /// <para>
+        /// Use cases for disabling caching on specific routes:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Routes with dynamic content that changes frequently</description></item>
+        /// <item><description>Admin routes where you always want fresh data</description></item>
+        /// <item><description>Routes with user-specific content that shouldn't be cached</description></item>
+        /// <item><description>Real-time dashboards or monitoring pages</description></item>
+        /// </list>
+        /// <para>
+        /// Note: This affects route match caching. Component type caching for lazy-loaded components
+        /// is controlled separately through CacheOptions.EnableComponentTypeCache.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// Disable caching for a specific route:
+        /// <code>
+        /// new RouteConfig
+        /// {
+        ///     Path = "/admin/dashboard",
+        ///     Component = typeof(AdminDashboard),
+        ///     EnableCache = false  // This route will never be cached
+        /// }
+        /// </code>
+        /// </example>
+        /// <example>
+        /// Force caching even if global caching is disabled:
+        /// <code>
+        /// new RouteConfig
+        /// {
+        ///     Path = "/static-page",
+        ///     Component = typeof(StaticPage),
+        ///     EnableCache = true  // This route will always be cached
+        /// }
+        /// </code>
+        /// </example>
+        public bool? EnableCache { get; set; } = null;
     }
 }

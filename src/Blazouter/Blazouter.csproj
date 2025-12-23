@@ -83,7 +83,7 @@
         <PackageReference Condition="$(TargetFramework.StartsWith('net7'))" Include="Microsoft.AspNetCore.Components.Web" Version="7.0.20" />
         <PackageReference Condition="$(TargetFramework.StartsWith('net8'))" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.22" />
         <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.AspNetCore.Components.Web" Version="9.0.11" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.AspNetCore.Components.Web" Version="10.0.1" />
     </ItemGroup>
 
     <ItemGroup>

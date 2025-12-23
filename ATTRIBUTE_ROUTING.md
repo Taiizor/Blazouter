@@ -6,10 +6,10 @@ Blazouter supports both programmatic route configuration (using `RouteConfig` ob
 
 Attribute-based routing allows you to decorate your Blazor components with attributes that define their routing configuration. This approach:
 
-- **✅ Declarative** - Clear, easy-to-read syntax
-- **✅ Flexible** - Can be mixed with programmatic routes as needed
-- **✅ More intuitive** - Route configuration is co-located with the component
-- **✅ Backward compatible** - Works alongside existing programmatic routing
+-   **✅ Declarative** - Clear, easy-to-read syntax
+-   **✅ Flexible** - Can be mixed with programmatic routes as needed
+-   **✅ More intuitive** - Route configuration is co-located with the component
+-   **✅ Backward compatible** - Works alongside existing programmatic routing
 
 ## Available Attributes
 
@@ -28,7 +28,8 @@ public class AdminPage : ComponentBase
 **Note:** Named `Route` instead of `Route` to avoid conflicts with Blazor's built-in `RouteAttribute`.
 
 **Parameters:**
-- `path` (string) - The route path pattern. Supports dynamic parameters with `:` prefix (e.g., `/users/:id`)
+
+-   `path` (string) - The route path pattern. Supports dynamic parameters with `:` prefix (e.g., `/users/:id`)
 
 ### `[RouteTransition]` - Set Animation
 
@@ -44,7 +45,8 @@ public class AboutPage : ComponentBase
 ```
 
 **Parameters:**
-- `transition` (RouteTransition enum) - The animation type (Fade, Slide, Scale, etc.)
+
+-   `transition` (RouteTransition enum) - The animation type (Fade, Slide, Scale, etc.)
 
 ### `[RouteMiddleware]` - Add Route Middleware
 
@@ -62,16 +64,18 @@ public class AdminPage : ComponentBase
 ```
 
 **Parameters:**
-- `middlewareType` (Type) - The type of the middleware class (must implement `IRouteMiddleware`)
+
+-   `middlewareType` (Type) - The type of the middleware class (must implement `IRouteMiddleware`)
 
 **Note:** Middleware execute in the order they are declared, before guards. Middleware can execute code before and after navigation, share data with components, and abort or redirect navigation.
 
 **Common Use Cases:**
-- Logging and analytics tracking
-- Performance monitoring
-- Data preloading
-- Feature flags
-- Session management
+
+-   Logging and analytics tracking
+-   Performance monitoring
+-   Data preloading
+-   Feature flags
+-   Session management
 
 ### `[RouteGuard]` - Add Access Control
 
@@ -88,7 +92,8 @@ public class AdminPage : ComponentBase
 ```
 
 **Parameters:**
-- `guardType` (Type) - The type of the guard class (must implement `IRouteGuard`)
+
+-   `guardType` (Type) - The type of the guard class (must implement `IRouteGuard`)
 
 **Note:** Guards execute in the order they are declared, after middleware.
 
@@ -106,7 +111,8 @@ public class AdminPage : ComponentBase
 ```
 
 **Parameters:**
-- `layoutType` (Type?) - The layout component type (must inherit from `LayoutComponentBase`), or `null` for no layout
+
+-   `layoutType` (Type?) - The layout component type (must inherit from `LayoutComponentBase`), or `null` for no layout
 
 ### `[RouteTitle]` - Set Page Title
 
@@ -122,7 +128,8 @@ public class AboutPage : ComponentBase
 ```
 
 **Parameters:**
-- `title` (string) - The route title
+
+-   `title` (string) - The route title
 
 ### `[RouteData]` - Add Custom Data
 
@@ -137,14 +144,15 @@ public class AdminPage : ComponentBase
     // Only define parameters you need - others are automatically filtered
     [Parameter]
     public string? Section { get; set; }
-    
+
     // RequireAdmin is not defined, so it's filtered out (no error)
 }
 ```
 
 **Parameters:**
-- `key` (string) - The data key
-- `value` (object) - The data value
+
+-   `key` (string) - The data key
+-   `value` (object) - The data value
 
 **Note:** Route data is automatically filtered based on component parameters. You can use any `[RouteData]` attributes without needing matching parameters in the component - only data with matching `[Parameter]` properties will be passed through.
 
@@ -162,7 +170,8 @@ public partial class OldPathRedirect : ComponentBase
 ```
 
 **Parameters:**
-- `redirectPath` (string) - The target redirect path
+
+-   `redirectPath` (string) - The target redirect path
 
 **Note:** When using `RouteRedirect`, the component will not be rendered, and other attributes like `RouteTransition` or `RouteGuard` will be ignored.
 
@@ -180,9 +189,36 @@ public partial class ProductsPage : ComponentBase
 ```
 
 **Parameters:**
-- `exact` (bool) - Whether the route path must match the URL exactly (defaults to `true`)
+
+-   `exact` (bool) - Whether the route path must match the URL exactly (defaults to `true`)
 
 **Note:** When `false` (default behavior without the attribute), routes with child routes can match partially. Use `[RouteExact(true)]` for routes that should only match the exact path.
+
+### `[RouteCache]` - Control Route Caching
+
+Specifies whether caching is enabled for this specific route.
+
+```csharp
+[Route("/admin/dashboard")]
+[RouteCache(false)]
+public partial class AdminDashboard : ComponentBase
+{
+    // This route will never be cached
+}
+
+[Route("/static-page")]
+[RouteCache(true)]
+public partial class StaticPage : ComponentBase
+{
+    // This route will always be cached, even if global caching is disabled
+}
+```
+
+**Parameters:**
+
+-   `enableCache` (bool?) - Whether to cache this route. `true` = always cache, `false` = never cache, `null` = use global settings (default)
+
+**Note:** This affects route match caching. For more information about caching, see [CACHING.md](CACHING.md).
 
 ## Usage
 
@@ -231,7 +267,7 @@ namespace MyApp.Pages
         // Access route data via parameters if needed
         [Parameter]
         public string? Section { get; set; }
-        
+
         // Component implementation
     }
 }
@@ -283,7 +319,7 @@ using Blazouter.Extensions;
 
 public partial class App
 {
-    private List<RouteConfig> _routes = 
+    private List<RouteConfig> _routes =
         RouteConfigExtensions.FromAttributes(typeof(App).Assembly);
 }
 ```
@@ -310,9 +346,9 @@ Attribute-based routes support dynamic parameters just like programmatic routes:
 public class UserDetailPage : ComponentBase
 {
     [Inject] private RouterStateService RouterState { get; set; } = default!;
-    
+
     private string? _userId;
-    
+
     protected override void OnInitialized()
     {
         _userId = RouterState.GetParam("id");
@@ -349,7 +385,7 @@ public class DataPreloadMiddleware : IRouteMiddleware
         // Preload data
         var data = await LoadDataAsync();
         context.Data["PreloadedData"] = data;
-        
+
         await next();
     }
 }
@@ -361,7 +397,7 @@ public class UserDetailPage : ComponentBase
 {
     [Parameter]
     public object? PreloadedData { get; set; }
-    
+
     // Only define parameters you need - other middleware data is automatically filtered
 }
 ```
@@ -443,16 +479,18 @@ public class AdminPage : ComponentBase { }
 ### 3. When to Use Attributes vs Programmatic
 
 **Use Attributes When:**
-- Route configuration is simple and self-contained
-- You want configuration co-located with the component
-- The route doesn't have complex nested children
-- You need basic redirects or exact matching
+
+-   Route configuration is simple and self-contained
+-   You want configuration co-located with the component
+-   The route doesn't have complex nested children
+-   You need basic redirects or exact matching
 
 **Use Programmatic Configuration When:**
-- You need nested routes with complex hierarchies
-- Routes need to be generated dynamically
-- You need lazy loading with `ComponentLoader`
-- Route configuration is shared across components
+
+-   You need nested routes with complex hierarchies
+-   Routes need to be generated dynamically
+-   You need lazy loading with `ComponentLoader`
+-   Route configuration is shared across components
 
 **Note:** As of this version, all `RouteConfig` properties except `ComponentLoader` and `Children` are supported via attributes.
 
@@ -474,7 +512,7 @@ private List<RouteConfig> _routes = new List<RouteConfig>
             new RouteConfig { Path = ":id", Component = typeof(ProductDetail) }
         }
     },
-    
+
     // Lazy-loaded route - programmatic
     new RouteConfig
     {
@@ -521,22 +559,23 @@ Both approaches produce the exact same result - choose based on your preference 
 
 The following table shows which `RouteConfig` properties are supported via attributes:
 
-| RouteConfig Property | Attribute Support | Attribute Name | Notes |
-|---------------------|-------------------|----------------|-------|
-| `Path` | ✅ Yes | `[Route("/path")]` | Required for attribute-based routing |
-| `Component` | ✅ Yes | (Inferred) | Automatically set to the decorated component type |
-| `Transition` | ✅ Yes | `[RouteTransition(...)]` | Supports all transition types |
-| `Middleware` | ✅ Yes | `[RouteMiddleware(typeof(...))]` | Can be applied multiple times |
-| `Guards` | ✅ Yes | `[RouteGuard(typeof(...))]` | Can be applied multiple times |
-| `Title` | ✅ Yes | `[RouteTitle("...")]` | Sets the route title |
-| `Layout` | ✅ Yes | `[RouteLayout(typeof(...))]` | Supports null for no layout |
-| `Data` | ✅ Yes | `[RouteData("key", value)]` | Can be applied multiple times |
-| `RedirectTo` | ✅ Yes | `[RouteRedirect("/path")]` | Component won't render when redirecting |
-| `Exact` | ✅ Yes | `[RouteExact(true)]` | Controls exact path matching |
-| `ComponentLoader` | ❌ No | N/A | Requires async lambda - use programmatic config |
-| `Children` | ❌ No | N/A | Complex hierarchies - use programmatic config |
+| RouteConfig Property | Attribute Support | Attribute Name                   | Notes                                             |
+| -------------------- | ----------------- | -------------------------------- | ------------------------------------------------- |
+| `Path`               | ✅ Yes            | `[Route("/path")]`               | Required for attribute-based routing              |
+| `Component`          | ✅ Yes            | (Inferred)                       | Automatically set to the decorated component type |
+| `Transition`         | ✅ Yes            | `[RouteTransition(...)]`         | Supports all transition types                     |
+| `Middleware`         | ✅ Yes            | `[RouteMiddleware(typeof(...))]` | Can be applied multiple times                     |
+| `Guards`             | ✅ Yes            | `[RouteGuard(typeof(...))]`      | Can be applied multiple times                     |
+| `Title`              | ✅ Yes            | `[RouteTitle("...")]`            | Sets the route title                              |
+| `Layout`             | ✅ Yes            | `[RouteLayout(typeof(...))]`     | Supports null for no layout                       |
+| `Data`               | ✅ Yes            | `[RouteData("key", value)]`      | Can be applied multiple times                     |
+| `RedirectTo`         | ✅ Yes            | `[RouteRedirect("/path")]`       | Component won't render when redirecting           |
+| `Exact`              | ✅ Yes            | `[RouteExact(true)]`             | Controls exact path matching                      |
+| `EnableCache`        | ✅ Yes            | `[RouteCache(true/false)]`       | Controls per-route caching                        |
+| `ComponentLoader`    | ❌ No             | N/A                              | Requires async lambda - use programmatic config   |
+| `Children`           | ❌ No             | N/A                              | Complex hierarchies - use programmatic config     |
 
-**Coverage:** 10 out of 12 `RouteConfig` properties are supported via attributes (83% coverage).
+**Coverage:** 11 out of 12 `RouteConfig` properties are supported via attributes (92% coverage).
 
 The two unsupported properties (`ComponentLoader` and `Children`) require complex programmatic logic that cannot be expressed declaratively through attributes. For these scenarios, use traditional programmatic `RouteConfig` objects.
 
@@ -549,8 +588,9 @@ The two unsupported properties (`ComponentLoader` and `Children`) require comple
 ### Q: Can I use both `@page` and `[Route]` on the same component?
 
 **A:** While technically possible, it's not recommended. Choose one routing approach:
-- Use `@page` for Blazor's built-in routing
-- Use `[Route]` for Blazouter's enhanced routing
+
+-   Use `@page` for Blazor's built-in routing
+-   Use `[Route]` for Blazouter's enhanced routing
 
 ### Q: Do attribute-based routes break existing code?
 
@@ -578,6 +618,6 @@ Check out the [AttributeRouting.razor](samples/Blazouter.WebAssembly.Sample/Page
 
 ## Learn More
 
-- [Main README](README.md)
-- [Sample Applications](samples/)
-- [Features Documentation](FEATURES.md)
+-   [Main README](README.md)
+-   [Sample Applications](samples/)
+-   [Features Documentation](FEATURES.md)

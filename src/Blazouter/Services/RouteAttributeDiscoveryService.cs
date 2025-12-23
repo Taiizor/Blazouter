@@ -258,6 +258,13 @@ namespace Blazouter.Services
                 config.Exact = exactAttr.Exact;
             }
 
+            // Route Cache
+            RouteCacheAttribute? cacheAttr = componentType.GetCustomAttribute<RouteCacheAttribute>(inherit: true);
+            if (cacheAttr != null)
+            {
+                config.EnableCache = cacheAttr.EnableCache;
+            }
+
             return config;
         }
 

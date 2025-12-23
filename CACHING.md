@@ -6,13 +6,13 @@ Blazouter includes a sophisticated caching system to optimize route matching and
 
 ## Features
 
-- **Route Match Caching**: Caches route matching results for faster subsequent navigations
-- **Component Type Caching**: Lazily loaded components are cached to avoid repeated async loading
-- **LRU Eviction**: Least Recently Used (LRU) policy ensures efficient memory usage for route cache
-- **FIFO Eviction**: First In First Out (FIFO) policy for component type cache
-- **TTL Support**: Optional time-to-live for cache entries
-- **Thread-Safe**: Concurrent-safe implementation for server-side scenarios
-- **Statistics Tracking**: Monitor cache performance with detailed metrics
+-   **Route Match Caching**: Caches route matching results for faster subsequent navigations
+-   **Component Type Caching**: Lazily loaded components are cached to avoid repeated async loading
+-   **LRU Eviction**: Least Recently Used (LRU) policy ensures efficient memory usage for route cache
+-   **FIFO Eviction**: First In First Out (FIFO) policy for component type cache
+-   **TTL Support**: Optional time-to-live for cache entries
+-   **Thread-Safe**: Concurrent-safe implementation for server-side scenarios
+-   **Statistics Tracking**: Monitor cache performance with detailed metrics
 
 ## Architecture
 
@@ -29,19 +29,19 @@ public class CacheOptions
 {
     // Enable/disable route match caching
     public bool EnableRouteMatchCache { get; set; } = true;
-    
+
     // Enable/disable component type caching
     public bool EnableComponentTypeCache { get; set; } = true;
-    
+
     // Maximum number of route matches to cache (default: 100)
     public int MaxRouteMatchCacheSize { get; set; } = 100;
-    
+
     // Maximum number of component types to cache (default: 50)
     public int MaxComponentTypeCacheSize { get; set; } = 50;
-    
+
     // Time-to-live in seconds for route matches (0 = no expiration)
     public int RouteMatchCacheTTLSeconds { get; set; } = 0;
-    
+
     // Enable statistics tracking
     public bool EnableStatistics { get; set; } = false;
 }
@@ -76,11 +76,11 @@ public interface IRouteCacheService
     RouteMatch? GetCachedRouteMatch(string path);
     void CacheRouteMatch(string path, RouteMatch match);
     void InvalidateRouteMatch(string path);
-    
+
     // Component type cache operations
     Type? GetCachedComponentType(string routePath);
     void CacheComponentType(string routePath, Type componentType);
-    
+
     // Management operations
     void Clear();
     CacheStatistics GetStatistics();
@@ -92,10 +92,11 @@ public interface IRouteCacheService
 #### `RouteCacheService`
 
 Thread-safe implementation using:
-- `ConcurrentDictionary` for concurrent access
-- `Interlocked` operations for atomic updates
-- LRU eviction for route matches
-- FIFO eviction for component types
+
+-   `ConcurrentDictionary` for concurrent access
+-   `Interlocked` operations for atomic updates
+-   LRU eviction for route matches
+-   FIFO eviction for component types
 
 #### `CachedRouteMatcherService`
 
@@ -108,14 +109,14 @@ public RouteMatch? MatchRoute(string path, List<RouteConfig> routes)
     var cachedMatch = _cacheService.GetCachedRouteMatch(path);
     if (cachedMatch != null)
         return cachedMatch;
-    
+
     // 2. Cache miss - perform actual matching
     var match = _innerMatcher.MatchRoute(path, routes);
-    
+
     // 3. Cache successful matches
     if (match != null && (match.Route?.EnableCache ?? true))
         _cacheService.CacheRouteMatch(path, match);
-    
+
     return match;
 }
 ```
@@ -188,10 +189,11 @@ builder.Services.AddBlazouter();
 ```
 
 Default settings:
-- Route match cache: **Enabled** (100 entries)
-- Component type cache: **Enabled** (50 entries)
-- TTL: **No expiration**
-- Statistics: **Disabled**
+
+-   Route match cache: **Enabled** (100 entries)
+-   Component type cache: **Enabled** (50 entries)
+-   TTL: **No expiration**
+-   Statistics: **Disabled**
 
 ### Custom Configuration
 
@@ -203,13 +205,13 @@ builder.Services.AddBlazouter(options =>
     // Increase cache sizes for large applications
     options.MaxRouteMatchCacheSize = 200;
     options.MaxComponentTypeCacheSize = 100;
-    
+
     // Enable statistics for monitoring
     options.EnableStatistics = true;
-    
+
     // Set TTL for development (routes might change)
     options.RouteMatchCacheTTLSeconds = 300; // 5 minutes
-    
+
     // Disable specific caches if needed
     options.EnableRouteMatchCache = true;
     options.EnableComponentTypeCache = true;
@@ -244,10 +246,41 @@ new RouteConfig
 ```
 
 **Use cases for disabling cache per route:**
-- Admin dashboards with real-time data
-- User-specific pages that change frequently
-- Routes with middleware that should run every time
-- Routes with dynamic content
+
+-   Admin dashboards with real-time data
+-   User-specific pages that change frequently
+-   Routes with middleware that should run every time
+-   Routes with dynamic content
+
+## Attribute-Based Cache Control
+
+You can also control caching using the `[RouteCache]` attribute on your component class:
+
+```csharp
+using Blazouter.Attributes;
+using Microsoft.AspNetCore.Components;
+using RouteAttribute = Blazouter.Attributes.RouteAttribute;
+
+// Disable caching for this route
+[Route("/admin/dashboard")]
+[RouteCache(false)]
+public class AdminDashboard : ComponentBase { }
+
+// Force caching even if global caching is disabled
+[Route("/static-page")]
+[RouteCache(true)]
+public class StaticPage : ComponentBase { }
+
+// Use global settings (default - attribute not needed)
+[Route("/default")]
+public class DefaultPage : ComponentBase { }
+```
+
+**Attribute values:**
+
+-   `[RouteCache(false)]` - Never cache this route
+-   `[RouteCache(true)]` - Always cache this route
+-   No attribute - Use global cache settings (default)
 
 ## Cache Statistics
 
@@ -260,7 +293,7 @@ Monitor cache performance:
     private void ShowStats()
     {
         var stats = CacheService.GetStatistics();
-        
+
         Console.WriteLine($"Hit Rate: {stats.HitRate:F2}%");
         Console.WriteLine($"Total Requests: {stats.TotalRequests}");
         Console.WriteLine($"Route Cache Size: {stats.RouteMatchCacheSize}");
@@ -284,7 +317,7 @@ Programmatically manage cache entries:
     {
         CacheService.Clear();
     }
-    
+
     // Invalidate specific route
     private void InvalidateRoute(string path)
     {
@@ -298,61 +331,70 @@ Programmatically manage cache entries:
 ### Cache Hit vs Cache Miss
 
 **Cache Hit:**
-- Navigation Time: ~0.1ms (dictionary lookup)
-- Performance Gain: 10-100x faster than cache miss
+
+-   Navigation Time: ~0.1ms (dictionary lookup)
+-   Performance Gain: 10-100x faster than cache miss
 
 **Cache Miss:**
-- Navigation Time: ~1-10ms (route matching algorithm)
-- Subsequent operations will benefit from cache
+
+-   Navigation Time: ~1-10ms (route matching algorithm)
+-   Subsequent operations will benefit from cache
 
 ### Memory Usage
 
 **Route Match Cache:**
-- Entry size: ~200-500 bytes
-- Max memory (100 entries): ~20-50 KB
-- Max memory (200 entries): ~40-100 KB
+
+-   Entry size: ~200-500 bytes
+-   Max memory (100 entries): ~20-50 KB
+-   Max memory (200 entries): ~40-100 KB
 
 **Component Type Cache:**
-- Entry size: ~100-200 bytes
-- Max memory (50 entries): ~5-10 KB
-- Max memory (100 entries): ~10-20 KB
+
+-   Entry size: ~100-200 bytes
+-   Max memory (50 entries): ~5-10 KB
+-   Max memory (100 entries): ~10-20 KB
 
 **Total:** ~25-110 KB (default settings)
 
 ### Thread Safety
 
-- Singleton service shared across all users
-- Thread-safe concurrent operations
-- No locking required
-- Safe for server-side scenarios
+-   Singleton service shared across all users
+-   Thread-safe concurrent operations
+-   No locking required
+-   Safe for server-side scenarios
 
 ## Cache Strategies
 
 ### Route Match Cache - LRU (Least Recently Used)
 
 **Why LRU?**
-- Frequently accessed routes stay in cache
-- Rarely used routes get evicted
-- Controlled memory growth
+
+-   Frequently accessed routes stay in cache
+-   Rarely used routes get evicted
+-   Controlled memory growth
 
 **How it works:**
+
 1. Each cache hit updates `LastAccessedTicks`
 2. When cache is full, entry with lowest `LastAccessedTicks` is removed
 3. Thread-safe using `Interlocked.Exchange`
 
 **Performance:**
-- Cache hit: O(1) - dictionary lookup
-- Cache miss: O(1) - dictionary insert
-- Eviction: O(n) - scans all entries
+
+-   Cache hit: O(1) - dictionary lookup
+-   Cache miss: O(1) - dictionary insert
+-   Eviction: O(n) - scans all entries
 
 ### Component Type Cache - FIFO (First In First Out)
 
 **Why FIFO?**
-- Component types rarely change
-- First loaded components are usually most important
-- Simple and predictable
+
+-   Component types rarely change
+-   First loaded components are usually most important
+-   Simple and predictable
 
 **How it works:**
+
 1. `ConcurrentQueue` tracks insertion order
 2. When cache is full, oldest entry is removed
 3. Dictionary entry is removed correspondingly
@@ -362,23 +404,26 @@ Programmatically manage cache entries:
 ### When to Enable Caching
 
 ✅ **Enable for:**
-- Static/public content (homepage, about, terms)
-- Navigation-heavy applications
-- Complex nested routes
-- Frequently accessed pages
-- Lazy-loaded components
+
+-   Static/public content (homepage, about, terms)
+-   Navigation-heavy applications
+-   Complex nested routes
+-   Frequently accessed pages
+-   Lazy-loaded components
 
 ### When to Disable Caching
 
 ❌ **Disable for:**
-- User-specific content (profiles, dashboards)
-- Real-time data (live feeds, chat)
-- Admin panels with dynamic configuration
-- Routes that must always execute guards/middleware fresh
+
+-   User-specific content (profiles, dashboards)
+-   Real-time data (live feeds, chat)
+-   Admin panels with dynamic configuration
+-   Routes that must always execute guards/middleware fresh
 
 ### Cache Tuning Guidelines
 
 **Cache Size:**
+
 ```csharp
 // Small app (10-20 routes)
 options.MaxRouteMatchCacheSize = 50;
@@ -391,6 +436,7 @@ options.MaxRouteMatchCacheSize = 300-500;
 ```
 
 **TTL Settings:**
+
 ```csharp
 // Production - no expiration
 options.RouteMatchCacheTTLSeconds = 0;  // Default
@@ -403,6 +449,7 @@ options.RouteMatchCacheTTLSeconds = 300;  // 5 minutes
 ```
 
 **Statistics:**
+
 ```csharp
 // Production - disabled (performance)
 options.EnableStatistics = false;  // Default
@@ -458,15 +505,15 @@ builder.Services.AddBlazouter(options =>
 
 @code {
     private CacheStatistics? _stats;
-    
+
     protected override void OnInitialized() => RefreshStats();
-    
+
     private void RefreshStats()
     {
         _stats = CacheService.GetStatistics();
         StateHasChanged();
     }
-    
+
     private void ClearCache()
     {
         CacheService.Clear();
@@ -481,26 +528,26 @@ builder.Services.AddBlazouter(options =>
 private List<RouteConfig> _routes = new()
 {
     // Public static pages - aggressive caching
-    new RouteConfig 
-    { 
-        Path = "/", 
+    new RouteConfig
+    {
+        Path = "/",
         Component = typeof(Home),
-        EnableCache = true 
+        EnableCache = true
     },
-    
+
     // User-specific pages - no caching
-    new RouteConfig 
-    { 
-        Path = "/profile", 
+    new RouteConfig
+    {
+        Path = "/profile",
         Component = typeof(UserProfile),
         EnableCache = false,
         Guards = new List<Type> { typeof(AuthGuard) }
     },
-    
+
     // Product catalog - cache with middleware
-    new RouteConfig 
-    { 
-        Path = "/products/:id", 
+    new RouteConfig
+    {
+        Path = "/products/:id",
         Component = typeof(ProductDetail),
         EnableCache = true,
         Middleware = new List<Type> { typeof(AnalyticsMiddleware) }
@@ -510,20 +557,20 @@ private List<RouteConfig> _routes = new()
 
 ## Cache System Summary
 
-| Feature | Route Match Cache | Component Type Cache |
-|---------|------------------|---------------------|
-| **Status** | ✅ Active | ✅ Active |
-| **Purpose** | Cache route matching results | Cache lazy-loaded component types |
-| **Key** | URL path (with query string) | Route path |
-| **Value** | RouteMatch object | Component Type |
-| **Eviction** | LRU (Least Recently Used) | FIFO (First In First Out) |
-| **Default Size** | 100 entries | 50 entries |
-| **TTL Support** | ✅ Yes | ❌ No |
-| **Thread Safety** | ✅ ConcurrentDictionary | ✅ ConcurrentDictionary + Queue |
-| **Memory Impact** | ~20-50 KB | ~5-10 KB |
-| **Performance Gain** | 10-100x | Instant after first load |
-| **Per-Route Control** | ✅ RouteConfig.EnableCache | ❌ Global only |
-| **Integration** | ✅ CachedRouteMatcherService | ✅ Router component |
+| Feature               | Route Match Cache            | Component Type Cache              |
+| --------------------- | ---------------------------- | --------------------------------- |
+| **Status**            | ✅ Active                    | ✅ Active                         |
+| **Purpose**           | Cache route matching results | Cache lazy-loaded component types |
+| **Key**               | URL path (with query string) | Route path                        |
+| **Value**             | RouteMatch object            | Component Type                    |
+| **Eviction**          | LRU (Least Recently Used)    | FIFO (First In First Out)         |
+| **Default Size**      | 100 entries                  | 50 entries                        |
+| **TTL Support**       | ✅ Yes                       | ❌ No                             |
+| **Thread Safety**     | ✅ ConcurrentDictionary      | ✅ ConcurrentDictionary + Queue   |
+| **Memory Impact**     | ~20-50 KB                    | ~5-10 KB                          |
+| **Performance Gain**  | 10-100x                      | Instant after first load          |
+| **Per-Route Control** | ✅ RouteConfig.EnableCache   | ❌ Global only                    |
+| **Integration**       | ✅ CachedRouteMatcherService | ✅ Router component               |
 
 ## Implementation Details
 
@@ -536,7 +583,7 @@ public class CachedRouteMatcherService : IRouteMatcherService
 {
     private readonly RouteMatcherService _innerMatcher;
     private readonly IRouteCacheService _cacheService;
-    
+
     public RouteMatch? MatchRoute(string path, List<RouteConfig> routes)
     {
         // Try cache first
@@ -552,16 +599,16 @@ public class CachedRouteMatcherService : IRouteMatcherService
                 return cachedMatch; // Cache hit!
             }
         }
-        
+
         // Cache miss - perform matching
         var match = _innerMatcher.MatchRoute(path, routes);
-        
+
         // Cache successful matches
         if (match != null && (match.Route?.EnableCache ?? true))
         {
             _cacheService.CacheRouteMatch(path, match);
         }
-        
+
         return match;
     }
 }
@@ -576,7 +623,7 @@ private async Task LoadComponentWithCacheAsync(RouteMatch matchToLoad)
 {
     // Check cache first
     Type? cachedType = CacheService.GetCachedComponentType(matchToLoad.Route.Path);
-    
+
     if (cachedType != null)
     {
         // Cache hit - instant!
@@ -586,7 +633,7 @@ private async Task LoadComponentWithCacheAsync(RouteMatch matchToLoad)
     {
         // Cache miss - load component
         matchToLoad.ComponentType = await matchToLoad.Route.ComponentLoader!();
-        
+
         // Store in cache
         if (matchToLoad.ComponentType != null)
         {
@@ -600,45 +647,50 @@ private async Task LoadComponentWithCacheAsync(RouteMatch matchToLoad)
 
 ### Before Caching
 
-- Every navigation: Route matching algorithm runs (1-10ms)
-- Every lazy load: ComponentLoader executes (async delay)
+-   Every navigation: Route matching algorithm runs (1-10ms)
+-   Every lazy load: ComponentLoader executes (async delay)
 
 ### After Caching
 
 **Route Match Cache:**
-- First navigation: Normal (1-10ms)
-- Subsequent navigations: **Instant** (~0.1ms)
-- **Performance gain: 10-100x**
+
+-   First navigation: Normal (1-10ms)
+-   Subsequent navigations: **Instant** (~0.1ms)
+-   **Performance gain: 10-100x**
 
 **Component Type Cache:**
-- First lazy load: Normal (ComponentLoader executes)
-- Subsequent lazy loads: **Instant** (cached type used)
-- **Performance gain: ∞ (async loading completely bypassed)**
+
+-   First lazy load: Normal (ComponentLoader executes)
+-   Subsequent lazy loads: **Instant** (cached type used)
+-   **Performance gain: ∞ (async loading completely bypassed)**
 
 ## Troubleshooting
 
 ### Cache Not Working
 
 1. Check if caching is enabled:
-   ```csharp
-   options.EnableRouteMatchCache = true;
-   options.EnableComponentTypeCache = true;
-   ```
+
+    ```csharp
+    options.EnableRouteMatchCache = true;
+    options.EnableComponentTypeCache = true;
+    ```
 
 2. Check per-route settings:
-   ```csharp
-   EnableCache = null  // or true
-   ```
+
+    ```csharp
+    EnableCache = null  // or true
+    ```
 
 3. Verify statistics (if enabled):
-   ```csharp
-   var stats = CacheService.GetStatistics();
-   Console.WriteLine($"Hit Rate: {stats.HitRate}%");
-   ```
+    ```csharp
+    var stats = CacheService.GetStatistics();
+    Console.WriteLine($"Hit Rate: {stats.HitRate}%");
+    ```
 
 ### Cache Growing Too Large
 
 Adjust cache sizes:
+
 ```csharp
 options.MaxRouteMatchCacheSize = 50;  // Reduce size
 options.MaxComponentTypeCacheSize = 25;
@@ -647,6 +699,7 @@ options.MaxComponentTypeCacheSize = 25;
 ### Cache Entries Not Expiring
 
 Set TTL if needed:
+
 ```csharp
 options.RouteMatchCacheTTLSeconds = 300;  // 5 minutes
 ```

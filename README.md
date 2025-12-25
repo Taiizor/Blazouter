@@ -32,7 +32,7 @@ Blazouter addresses the limitations of traditional Blazor routing:
 | Layout System | ✔ Component composition | ⚠️ Static @layout | ✅ Dynamic per-route with priority |
 | Nested Routes | ✔ Easy to define child routes | ❌ Limited, single level with `@page` | ✅ Unlimited nesting with RouterOutlet |
 | Error Handling | ✔ Error boundaries | ❌ Manual | ✅ Built-in IRouterErrorHandler |
-| Attribute Routes | ✔ JSX-based | ❌ @page only | ✅ 9 attribute types with full config |
+| Attribute Routes | ✔ JSX-based | ❌ @page only | ✅ 11 attribute types with full config |
 | Dynamic Params | ✔ Easy route parameters | ✔ Available but basic | ✅ Enhanced with RouterStateService |
 | Route Transitions | ✔ Very easy | ❌ No native support | ✅ 14 built-in transition types |
 | Route Middleware | ✔ Route-level middleware | ❌ No native support | ✅ Built-in IRouteMiddleware interface |

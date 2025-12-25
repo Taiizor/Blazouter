@@ -575,7 +575,7 @@ The following table shows which `RouteConfig` properties are supported via attri
 | `ComponentLoader`    | ❌ No             | N/A                              | Requires async lambda - use programmatic config   |
 | `Children`           | ❌ No             | N/A                              | Complex hierarchies - use programmatic config     |
 
-**Coverage:** 11 out of 12 `RouteConfig` properties are supported via attributes (92% coverage).
+**Coverage:** 11 out of 13 `RouteConfig` properties are supported via attributes (92% coverage).
 
 The two unsupported properties (`ComponentLoader` and `Children`) require complex programmatic logic that cannot be expressed declaratively through attributes. For these scenarios, use traditional programmatic `RouteConfig` objects.
 

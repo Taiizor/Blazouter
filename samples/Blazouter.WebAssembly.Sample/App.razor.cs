@@ -22,8 +22,7 @@ namespace Blazouter.WebAssembly.Sample
         private async Task OnNavigateAsync(BlazouterNavigationContext context)
         {
             // Load the lazy module assembly when navigating to /support or /help
-            if (context.Path.StartsWith("/support", StringComparison.OrdinalIgnoreCase) ||
-                context.Path.StartsWith("/help", StringComparison.OrdinalIgnoreCase))
+            if (context.Path.StartsWith("/support", StringComparison.OrdinalIgnoreCase) || context.Path.StartsWith("/help", StringComparison.OrdinalIgnoreCase))
             {
                 if (_lazyLoadedAssemblies.Count == 0)
                 {

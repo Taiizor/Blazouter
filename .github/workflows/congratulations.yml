@@ -1,0 +1,92 @@
+name: Congratulations
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request:
+    branches:
+      - develop
+    types:
+      - opened
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  Congratulation:
+    name: Congratulations
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/first-interaction@v3
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
+            # 🎉 Welcome to the Community!
+
+            Thank you for opening your **first issue** in this repository! We truly appreciate you taking the time to share your thoughts with us.
+
+            ## ⏳ What Happens Next?
+
+            - A maintainer will review your issue as soon as possible
+            - You may receive follow-up questions for clarification
+            - Please be patient — we're often managing multiple projects
+
+            ## 💡 Tips for a Smooth Process
+
+            - **Be descriptive**: The more details you provide, the faster we can help
+            - **Include examples**: Screenshots, error logs, or code snippets are incredibly helpful
+            - **Check existing issues**: Your question might already be answered somewhere
+            - **Stay engaged**: Respond to any questions or requests for more information
+
+            ## 📚 Helpful Resources
+
+            Please check the repository root for the following files (if available):
+            - `CONTRIBUTING.md` — Guidelines for contributing
+            - `CODE_OF_CONDUCT.md` — Community standards and expectations
+            - `README.md` — Project documentation and getting started guide
+
+            ---
+
+            > *We're excited to have you here! Every issue helps us improve.* 🚀
+
+          pr_message: |
+            # 🎉 Welcome, Contributor!
+
+            Thank you for submitting your **first pull request** to this repository! We're thrilled to see your contribution.
+
+            ## ⏳ What Happens Next?
+
+            - A maintainer will review your changes as soon as possible
+            - You may receive feedback or requests for modifications
+            - Once approved, your PR will be merged into the codebase
+
+            ## ✅ PR Checklist
+
+            Before your PR can be merged, please ensure:
+
+            - [ ] Your code follows the project's coding style and conventions
+            - [ ] You've tested your changes locally
+            - [ ] You've updated relevant documentation (if applicable)
+            - [ ] All CI checks are passing
+            - [ ] Your commits have clear and meaningful messages
+
+            ## 💡 Tips for Success
+
+            - **Keep it focused**: Smaller, focused PRs are easier to review
+            - **Describe your changes**: Help reviewers understand what you did and why
+            - **Be responsive**: Address feedback promptly to keep the review moving
+            - **Ask questions**: Don't hesitate to ask if something is unclear
+
+            ## 🔄 Need to Make Changes?
+
+            If you need to update your PR based on feedback:
+            1. Make your changes locally
+            2. Commit and push to the same branch
+            3. The PR will automatically update
+
+            ---
+
+            > *Your contribution makes this project better. Thank you for being part of our community!* 💜

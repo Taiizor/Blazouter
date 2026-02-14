@@ -4,8 +4,10 @@ using Blazouter.Extensions;
 using Blazouter.Handlers;
 using Blazouter.Interfaces;
 using Blazouter.Models;
+using Blazouter.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Blazouter.Components
@@ -283,6 +285,113 @@ namespace Blazouter.Components
         public EventCallback<RouterErrorEventArgs> OnError { get; set; }
 
         /// <summary>
+        /// Gets or sets the callback that is invoked during each navigation before route matching occurs.
+        /// </summary>
+        /// <value>
+        /// An <see cref="EventCallback{BlazouterNavigationContext}"/> that receives navigation context data.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// This callback enables lazy loading of assemblies during navigation. It is invoked before route
+        /// matching, allowing you to load assemblies on demand (e.g., via LazyAssemblyLoader in Blazor WebAssembly)
+        /// and update the <see cref="AdditionalAssemblies"/> parameter so that routes from newly loaded assemblies
+        /// are discovered and matched.
+        /// </para>
+        /// <para>
+        /// If a new navigation occurs while OnNavigateAsync is still executing, the previous callback's
+        /// <see cref="BlazouterNavigationContext.CancellationToken"/> is cancelled to prevent stale navigations.
+        /// </para>
+        /// <para>
+        /// While OnNavigateAsync is executing, the Router displays the Loading content (if defined).
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// Lazy-load WASM assemblies during navigation:
+        /// <code>
+        /// &lt;Router Routes="@_routes"
+        ///         AdditionalAssemblies="@_lazyLoadedAssemblies"
+        ///         OnNavigateAsync="OnNavigateAsync"&gt;
+        ///     &lt;Loading&gt;&lt;p&gt;Loading...&lt;/p&gt;&lt;/Loading&gt;
+        ///     &lt;NotFound&gt;&lt;h1&gt;404&lt;/h1&gt;&lt;/NotFound&gt;
+        /// &lt;/Router&gt;
+        ///
+        /// @code {
+        ///     private readonly List&lt;Assembly&gt; _lazyLoadedAssemblies = new();
+        ///
+        ///     private async Task OnNavigateAsync(BlazouterNavigationContext context)
+        ///     {
+        ///         if (context.Path.StartsWith("/admin"))
+        ///         {
+        ///             var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+        ///                 new[] { "MyApp.Admin.wasm" });
+        ///             _lazyLoadedAssemblies.AddRange(assemblies);
+        ///         }
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="AdditionalAssemblies"/>
+        /// <seealso cref="BlazouterNavigationContext"/>
+        [Parameter]
+        public EventCallback<BlazouterNavigationContext> OnNavigateAsync { get; set; }
+
+        /// <summary>
+        /// Gets or sets additional assemblies to scan for components with Blazouter route attributes.
+        /// </summary>
+        /// <value>
+        /// A collection of <see cref="Assembly"/> objects to scan, or null if no additional assemblies are needed.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// When set, the Router scans these assemblies for components decorated with Blazouter's
+        /// <c>[Route]</c> attribute and other route attributes (such as <c>[RouteGuard]</c>, <c>[RouteTransition]</c>,
+        /// <c>[RouteLayout]</c>, etc.). Discovered routes are merged with the programmatic <see cref="Routes"/>
+        /// configuration during route matching.
+        /// </para>
+        /// <para>
+        /// This parameter is designed for use with Blazor WebAssembly lazy-loaded assemblies (RCLs).
+        /// After loading assemblies via <c>LazyAssemblyLoader.LoadAssembliesAsync</c> in the
+        /// <see cref="OnNavigateAsync"/> callback, add the loaded assemblies to this collection so that
+        /// their route-attributed components become available for routing.
+        /// </para>
+        /// <para>
+        /// Each assembly is scanned only once. Subsequent navigations reuse previously discovered routes,
+        /// ensuring efficient performance even with frequent navigations.
+        /// </para>
+        /// <para>
+        /// Components in additional assemblies must use Blazouter's <c>[Route]</c> attribute
+        /// (from <c>Blazouter.Attributes</c> namespace), not the standard <c>@page</c> directive.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// Use with lazy-loaded WASM assemblies:
+        /// <code>
+        /// &lt;Router Routes="@_routes"
+        ///         AdditionalAssemblies="@_lazyLoadedAssemblies"
+        ///         OnNavigateAsync="OnNavigateAsync"&gt;
+        ///     &lt;NotFound&gt;&lt;h1&gt;404&lt;/h1&gt;&lt;/NotFound&gt;
+        /// &lt;/Router&gt;
+        ///
+        /// @code {
+        ///     private readonly List&lt;Assembly&gt; _lazyLoadedAssemblies = new();
+        ///
+        ///     private async Task OnNavigateAsync(BlazouterNavigationContext context)
+        ///     {
+        ///         if (context.Path.StartsWith("/support"))
+        ///         {
+        ///             var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+        ///                 new[] { "MyApp.Support.wasm" });
+        ///             _lazyLoadedAssemblies.AddRange(assemblies);
+        ///         }
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="OnNavigateAsync"/>
+        [Parameter]
+        public IEnumerable<Assembly>? AdditionalAssemblies { get; set; }
+
+        /// <summary>
         /// The current matched route
         /// </summary>
         private RouteMatch? _currentMatch;
@@ -331,6 +440,26 @@ namespace Blazouter.Components
         /// Indicates whether this is the first render (pre-rendering phase in Blazor Server)
         /// </summary>
         private bool _isFirstRender = true;
+
+        /// <summary>
+        /// Cancellation token source for the current OnNavigateAsync callback
+        /// </summary>
+        private CancellationTokenSource? _navigationCts;
+
+        /// <summary>
+        /// Set of assemblies that have already been scanned for route attributes
+        /// </summary>
+        private readonly HashSet<Assembly> _scannedAssemblies = [];
+
+        /// <summary>
+        /// Routes discovered from AdditionalAssemblies via attribute scanning
+        /// </summary>
+        private List<RouteConfig> _additionalRoutes = [];
+
+        /// <summary>
+        /// Guard flag to prevent re-entrant calls to UpdateRouteCore during render cycles
+        /// </summary>
+        private bool _isUpdatingRoute = false;
 
         /// <summary>
         /// Initializes the router component and performs the initial route matching.
@@ -455,8 +584,56 @@ namespace Blazouter.Components
             _hasError = false;
             _errorInfo = null;
 
-            // Match the route
-            RouteMatch? match = RouteMatcher.MatchRoute(path + uri.Query, Routes);
+            // Execute OnNavigateAsync callback before route matching
+            // This allows lazy assembly loading before routes are resolved
+            if (OnNavigateAsync.HasDelegate)
+            {
+                // Cancel any previous in-flight OnNavigateAsync callback
+                _navigationCts?.Cancel();
+                _navigationCts?.Dispose();
+                _navigationCts = new CancellationTokenSource();
+
+                CancellationToken token = _navigationCts.Token;
+
+                // Show loading state while OnNavigateAsync executes
+                _isLoading = true;
+                StateHasChanged();
+
+                try
+                {
+                    BlazouterNavigationContext context = new(path, token);
+                    await OnNavigateAsync.InvokeAsync(context);
+
+                    // If a new navigation superseded this one, abort
+                    if (token.IsCancellationRequested)
+                    {
+                        _isLoading = false;
+                        return;
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    _isLoading = false;
+                    return;
+                }
+                catch (OperationCanceledException)
+                {
+                    _isLoading = false;
+                    return;
+                }
+
+                _isLoading = false;
+            }
+
+            // Scan AdditionalAssemblies for route attributes (each assembly is scanned only once)
+            ScanAdditionalAssemblies();
+
+            // Match the route - merge programmatic routes with attribute-discovered routes
+            List<RouteConfig> allRoutes = _additionalRoutes.Count > 0
+                ? [.. Routes, .. _additionalRoutes]
+                : Routes;
+
+            RouteMatch? match = RouteMatcher.MatchRoute(path + uri.Query, allRoutes);
 
             // Handle redirect
             if (match?.Route.RedirectTo != null)
@@ -1033,6 +1210,39 @@ namespace Blazouter.Components
         }
 
         /// <summary>
+        /// Scans assemblies from <see cref="AdditionalAssemblies"/> for components with Blazouter route attributes
+        /// and adds discovered routes to the internal route collection.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Each assembly is tracked in a HashSet and scanned only once, ensuring that routes are not duplicated
+        /// across multiple navigations. This is important for performance and correctness when the same
+        /// AdditionalAssemblies collection is provided on every render.
+        /// </para>
+        /// <para>
+        /// Uses <see cref="RouteAttributeDiscoveryService.DiscoverRoutes"/> to find components decorated with
+        /// Blazouter's [Route] attribute and other route attributes.
+        /// </para>
+        /// </remarks>
+        [RequiresUnreferencedCode("Scanning for route attributes requires unreferenced code. Types might be removed during trimming.")]
+        private void ScanAdditionalAssemblies()
+        {
+            if (AdditionalAssemblies == null)
+            {
+                return;
+            }
+
+            foreach (Assembly assembly in AdditionalAssemblies)
+            {
+                if (_scannedAssemblies.Add(assembly))
+                {
+                    List<RouteConfig> discovered = RouteAttributeDiscoveryService.DiscoverRoutes(assembly);
+                    _additionalRoutes.AddRange(discovered);
+                }
+            }
+        }
+
+        /// <summary>
         /// Releases the unmanaged resources used by the component and optionally releases the managed resources.
         /// </summary>
         /// <remarks>This method is called by both the public Dispose() method and the finalizer. When
@@ -1044,6 +1254,8 @@ namespace Blazouter.Components
             if (disposing)
             {
                 NavigationManager.LocationChanged -= OnLocationChanged;
+                _navigationCts?.Cancel();
+                _navigationCts?.Dispose();
             }
         }
     }

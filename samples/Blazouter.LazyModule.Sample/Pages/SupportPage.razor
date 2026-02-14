@@ -1,0 +1,22 @@
+<div class="px-4 py-16">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Support Page</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+            This page was loaded from a <strong>lazy-loaded Razor Class Library (RCL)</strong>.
+        </p>
+        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-4">
+            <p class="text-green-700 dark:text-green-300 font-semibold">
+                Lazy assembly loading with AdditionalAssemblies is working correctly!
+            </p>
+        </div>
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <h2 class="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-2">How it works</h2>
+            <ul class="list-disc list-inside text-blue-700 dark:text-blue-400 space-y-1">
+                <li>This component lives in <code>Blazouter.LazyModule.Sample</code> assembly</li>
+                <li>The assembly is marked with <code>&lt;BlazorWebAssemblyLazyLoad&gt;</code></li>
+                <li><code>OnNavigateAsync</code> loads the assembly when navigating to <code>/support</code></li>
+                <li>Routes are discovered via <code>AdditionalAssemblies</code> and <code>[Route]</code> attributes</li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -7,12 +7,31 @@ using Blazouter.WebAssembly.Sample.Middlewares;
 using Blazouter.WebAssembly.Sample.Pages;
 using Blazouter.WebAssembly.Sample.Pages.Users;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.Services;
+using System.Reflection;
 
 namespace Blazouter.WebAssembly.Sample
 {
     public partial class App
     {
+        [Inject] private LazyAssemblyLoader _assemblyLoader { get; set; } = default!;
         [Inject] private RouterNavigationService _navService { get; set; } = default!;
+
+        private readonly List<Assembly> _lazyLoadedAssemblies = [];
+
+        private async Task OnNavigateAsync(BlazouterNavigationContext context)
+        {
+            // Load the lazy module assembly when navigating to /support or /help
+            if (context.Path.StartsWith("/support", StringComparison.OrdinalIgnoreCase) ||
+                context.Path.StartsWith("/help", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_lazyLoadedAssemblies.Count == 0)
+                {
+                    IEnumerable<Assembly> assemblies = await _assemblyLoader.LoadAssembliesAsync(["Blazouter.LazyModule.Sample.wasm"]);
+                    _lazyLoadedAssemblies.AddRange(assemblies);
+                }
+            }
+        }
 
         private readonly List<RouteConfig> _routes = new List<RouteConfig>
         {

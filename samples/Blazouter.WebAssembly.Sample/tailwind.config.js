@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
-        "./**/*.{cs,razor,html,cshtml}"
+        "./**/*.{cs,razor,html,cshtml}",
+        "./../Blazouter.LazyModule.Sample/**/*.{cs,razor,html,cshtml}",
     ],
     safelist: [],
     darkMode: 'class',

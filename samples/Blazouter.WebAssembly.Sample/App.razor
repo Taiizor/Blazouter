@@ -1,4 +1,6 @@
-﻿<Router Routes="@_routes" DefaultLayout="typeof(MainLayout)">
+﻿<Router Routes="@_routes" DefaultLayout="typeof(MainLayout)"
+		OnNavigateAsync="@OnNavigateAsync"
+		AdditionalAssemblies="@_lazyLoadedAssemblies">
 	<ErrorContent Context="errorInfo">
 		<div class="px-4 py-16">
 			<div class="max-w-2xl mx-auto">

@@ -21,6 +21,11 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Blazouter.WebAssembly\Blazouter.WebAssembly.csproj" />
+        <ProjectReference Include="..\Blazouter.LazyModule.Sample\Blazouter.LazyModule.Sample.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <BlazorWebAssemblyLazyLoad Include="Blazouter.LazyModule.Sample.wasm" />
     </ItemGroup>
 
     <ItemGroup>

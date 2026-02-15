@@ -240,6 +240,7 @@ new RouteConfig
 ```razor
 @using System.Reflection
 @using Blazouter.Models
+@using Blazouter.Components
 @using Microsoft.AspNetCore.Components.WebAssembly.Services
 
 @inject LazyAssemblyLoader AssemblyLoader
@@ -247,6 +248,8 @@ new RouteConfig
 <Router Routes="@_routes"
         OnNavigateAsync="@OnNavigateAsync"
         AdditionalAssemblies="@_lazyLoadedAssemblies">
+    <Loading><p>Loading...</p></Loading>
+    <NotFound><h1>404</h1></NotFound>
 </Router>
 
 @code {

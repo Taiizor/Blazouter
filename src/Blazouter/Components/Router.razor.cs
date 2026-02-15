@@ -457,9 +457,11 @@ namespace Blazouter.Components
         private List<RouteConfig> _additionalRoutes = [];
 
         /// <summary>
-        /// Guard flag to prevent re-entrant calls to UpdateRouteCore during render cycles
+        /// Tracks the last path for which OnNavigateAsync was invoked, preventing redundant
+        /// invocations from multiple lifecycle methods (OnParametersSetAsync, OnAfterRenderAsync)
+        /// which would otherwise cause an infinite re-render loop via EventCallback's HandleEventAsync.
         /// </summary>
-        private bool _isUpdatingRoute = false;
+        private string? _lastNavigatedPath;
 
         /// <summary>
         /// Initializes the router component and performs the initial route matching.
@@ -585,9 +587,16 @@ namespace Blazouter.Components
             _errorInfo = null;
 
             // Execute OnNavigateAsync callback before route matching
-            // This allows lazy assembly loading before routes are resolved
-            if (OnNavigateAsync.HasDelegate)
+            // This allows lazy assembly loading before routes are resolved.
+            // The path guard (_lastNavigatedPath) prevents redundant invocations from
+            // OnParametersSetAsync and OnAfterRenderAsync, which would otherwise cause
+            // an infinite re-render loop: EventCallback.InvokeAsync calls HandleEventAsync
+            // on the parent component, which calls StateHasChanged, causing the parent to
+            // re-render, which triggers OnParametersSetAsync on this component again.
+            if (OnNavigateAsync.HasDelegate && _lastNavigatedPath != path)
             {
+                _lastNavigatedPath = path;
+
                 // Cancel any previous in-flight OnNavigateAsync callback
                 _navigationCts?.Cancel();
                 _navigationCts?.Dispose();
@@ -595,9 +604,7 @@ namespace Blazouter.Components
 
                 CancellationToken token = _navigationCts.Token;
 
-                // Show loading state while OnNavigateAsync executes
                 _isLoading = true;
-                StateHasChanged();
 
                 try
                 {

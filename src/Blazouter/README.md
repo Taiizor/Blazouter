@@ -221,6 +221,8 @@ public class AuthGuard : IRouteGuard
 
 ## Lazy Loading
 
+**ComponentLoader** - Load components on-demand:
+
 ```csharp
 new RouteConfig
 {
@@ -229,6 +231,29 @@ new RouteConfig
     {
         await Task.Delay(100); // Simulated delay
         return typeof(ReportsPage);
+    }
+}
+```
+
+**WASM RCL Assembly Lazy Loading** - Load Razor Class Library assemblies on demand:
+
+```razor
+<Router Routes="@_routes"
+        OnNavigateAsync="@OnNavigateAsync"
+        AdditionalAssemblies="@_lazyLoadedAssemblies">
+</Router>
+
+@code {
+    private readonly List<Assembly> _lazyLoadedAssemblies = [];
+
+    private async Task OnNavigateAsync(BlazouterNavigationContext context)
+    {
+        if (context.Path.StartsWith("/module", StringComparison.OrdinalIgnoreCase))
+        {
+            var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+                ["MyModule.wasm"]);
+            _lazyLoadedAssemblies.AddRange(assemblies);
+        }
     }
 }
 ```

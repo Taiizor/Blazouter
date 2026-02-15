@@ -27,7 +27,7 @@ Blazouter addresses the limitations of traditional Blazor routing:
 | Feature | React Router | Blazor Router | **Blazouter** |
 |---------|--------------|---------------|---------------|
 | Active Links | ✔ Built-in NavLink | ⚠️ Manual active class | ✅ Automatic with RouterLink |
-| Lazy Loading | ✔ Route-based code splitting | ❌ Still limited in WASM | ✅ Full support with ComponentLoader |
+| Lazy Loading | ✔ Route-based code splitting | ❌ Still limited in WASM | ✅ ComponentLoader + WASM RCL assembly lazy loading |
 | Route Guards | ✔ Easy with wrappers/hooks | ❌ Manual, component-based | ✅ Built-in IRouteGuard interface |
 | Layout System | ✔ Component composition | ⚠️ Static @layout | ✅ Dynamic per-route with priority |
 | Nested Routes | ✔ Easy to define child routes | ❌ Limited, single level with `@page` | ✅ Unlimited nesting with RouterOutlet |
@@ -561,6 +561,8 @@ public class AuthGuard : IRouteGuard
 
 ### Lazy Loading
 
+**ComponentLoader** - Load components on-demand:
+
 ```csharp
 new RouteConfig
 {
@@ -572,6 +574,51 @@ new RouteConfig
         return typeof(ReportsPage);
     }
 }
+```
+
+**WASM RCL Assembly Lazy Loading** - Load entire Razor Class Library assemblies on demand in Blazor WebAssembly:
+
+```razor
+@using System.Reflection
+@using Blazouter.Models
+@using Blazouter.Components
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
+
+@inject LazyAssemblyLoader AssemblyLoader
+
+<Router Routes="@_routes"
+        DefaultLayout="typeof(MainLayout)"
+        OnNavigateAsync="@OnNavigateAsync"
+        AdditionalAssemblies="@_lazyLoadedAssemblies">
+    <Loading>
+        <p>Loading...</p>
+    </Loading>
+    <NotFound>
+        <h1>404 - Page Not Found</h1>
+    </NotFound>
+</Router>
+
+@code {
+    private readonly List<Assembly> _lazyLoadedAssemblies = [];
+
+    private async Task OnNavigateAsync(BlazouterNavigationContext context)
+    {
+        if (context.Path.StartsWith("/module-page", StringComparison.OrdinalIgnoreCase))
+        {
+            var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+                ["MyModule.wasm"]);
+            _lazyLoadedAssemblies.AddRange(assemblies);
+        }
+    }
+}
+```
+
+Configure lazy-loaded assemblies in your project file:
+
+```xml
+<ItemGroup>
+    <BlazorWebAssemblyLazyLoad Include="MyModule.wasm" />
+</ItemGroup>
 ```
 
 ### Route Links
@@ -1117,6 +1164,7 @@ Inspired by React Router and built to bring similar capabilities to the Blazor e
 - [x] Advanced caching strategies
 - [x] Query string helpers and utilities
 - [x] Better TypeScript integration for JS interop
+- [x] WASM RCL assembly lazy loading (OnNavigateAsync + AdditionalAssemblies)
 
 ## ⭐ Show Your Support
 

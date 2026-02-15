@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   **WASM Assembly Lazy Loading**: Support for lazy-loading Razor Class Library (RCL) assemblies in Blazor WebAssembly
+    -   `OnNavigateAsync` parameter on Router component for intercepting navigation and loading assemblies on demand
+    -   `AdditionalAssemblies` parameter on Router component for registering dynamically loaded assemblies for route discovery
+    -   `BlazouterNavigationContext` model providing navigation path and cancellation token to the callback
+    -   Cancellation support for in-flight `OnNavigateAsync` callbacks when rapid navigation occurs
+    -   Path-based guard preventing redundant `OnNavigateAsync` invocations during render cycles
+    -   New `Blazouter.LazyModule.Sample` project demonstrating lazy-loaded RCL assembly usage
+
 ## [1.0.13] - 2025-12-23
 
 ### Added

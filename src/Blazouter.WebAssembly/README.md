@@ -137,7 +137,11 @@ Configure a default layout for all routes and override per route:
 
 ## Lazy Loading for Better Performance
 
-In WebAssembly, lazy loading is crucial for reducing initial load time:
+In WebAssembly, lazy loading is crucial for reducing initial load time.
+
+### ComponentLoader
+
+Load individual components on-demand:
 
 ```csharp
 new RouteConfig
@@ -152,6 +156,62 @@ new RouteConfig
     Title = "Reports"
 }
 ```
+
+### WASM RCL Assembly Lazy Loading
+
+Load entire Razor Class Library (RCL) assemblies on demand using `OnNavigateAsync` and `AdditionalAssemblies`. This is ideal for large applications where separate modules are packaged as RCL projects:
+
+```razor
+@using System.Reflection
+@using Blazouter.Models
+@using Blazouter.Components
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
+
+@inject LazyAssemblyLoader AssemblyLoader
+
+<Router Routes="@_routes"
+        DefaultLayout="typeof(MainLayout)"
+        OnNavigateAsync="@OnNavigateAsync"
+        AdditionalAssemblies="@_lazyLoadedAssemblies">
+    <Loading>
+        <p>Loading module...</p>
+    </Loading>
+    <NotFound>
+        <h1>404 - Page Not Found</h1>
+    </NotFound>
+</Router>
+
+@code {
+    private readonly List<Assembly> _lazyLoadedAssemblies = [];
+
+    private async Task OnNavigateAsync(BlazouterNavigationContext context)
+    {
+        if (context.Path.StartsWith("/support", StringComparison.OrdinalIgnoreCase) ||
+            context.Path.StartsWith("/help", StringComparison.OrdinalIgnoreCase))
+        {
+            if (_lazyLoadedAssemblies.Count == 0)
+            {
+                var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+                    ["MyModule.wasm"]);
+                _lazyLoadedAssemblies.AddRange(assemblies);
+            }
+        }
+    }
+}
+```
+
+Configure the assemblies to lazy-load in your `.csproj`:
+
+```xml
+<ItemGroup>
+    <BlazorWebAssemblyLazyLoad Include="MyModule.wasm" />
+</ItemGroup>
+```
+
+**Key parameters:**
+- `OnNavigateAsync`: Callback invoked before each navigation. Use it to load assemblies based on the target path.
+- `AdditionalAssemblies`: List of dynamically loaded assemblies whose `[Route]` attributes are scanned for route discovery.
+- `BlazouterNavigationContext`: Provides `Path` (target URL) and `CancellationToken` for the callback.
 
 ## Nested Routes
 

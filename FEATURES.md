@@ -53,6 +53,13 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Component caching after first load for performance
 - `ComponentLoader` function property on `RouteConfig`
 - Loading state support with `<Loading>` parameter in Router
+- **WASM RCL Assembly Lazy Loading**: Load entire Razor Class Library assemblies on demand
+  - `OnNavigateAsync` callback on Router for intercepting navigation and loading assemblies
+  - `AdditionalAssemblies` parameter for registering dynamically loaded assemblies for route discovery
+  - `BlazouterNavigationContext` model with `Path` and `CancellationToken` properties
+  - Cancellation support for in-flight callbacks during rapid navigation
+  - Path-based deduplication preventing redundant invocations
+  - Works with `LazyAssemblyLoader` and `<BlazorWebAssemblyLazyLoad>` in project files
 
 ### ✅ 5. Route Transitions/Animations
 - 14 built-in transition types
@@ -207,6 +214,8 @@ Main routing component that:
 - Matches current URL to route configuration
 - Renders matched components with optional layouts
 - Manages layout wrapping via DefaultLayout parameter
+- Supports `OnNavigateAsync` callback for WASM assembly lazy loading
+- Supports `AdditionalAssemblies` for dynamically loaded assembly route discovery
 
 ### RouterLink
 Navigation link component that:
@@ -392,6 +401,9 @@ The sample application demonstrates:
    - Traditional vs fluent query string building comparison
    - Query parameter manipulation (update, remove, clear)
    - Interactive buttons demonstrating all query string features
+7. Lazy-loaded RCL assembly pages (Support, Help) via `OnNavigateAsync` and `AdditionalAssemblies`
+   - Demonstrates loading `Blazouter.LazyModule.Sample` assembly on demand
+   - Uses `LazyAssemblyLoader` with `<BlazorWebAssemblyLazyLoad>` configuration
 
 All features are interactive and can be tested by navigating through the application.
 
@@ -401,7 +413,7 @@ All features are interactive and can be tested by navigating through the applica
 |---------|-------------------|-----------|
 | Transitions | ❌ None | ✅ 14 built-in transitions |
 | Active Links | ⚠️ Manual | ✅ Automatic with RouterLink |
-| Lazy Loading | ⚠️ Limited | ✅ Full support with ComponentLoader |
+| Lazy Loading | ⚠️ Limited | ✅ ComponentLoader + WASM RCL assembly lazy loading |
 | Route Guards | ❌ Manual | ✅ Built-in IRouteGuard interface |
 | Layout System | ⚠️ Static @layout | ✅ Dynamic per-route with priority |
 | Error Handling | ❌ Manual | ✅ Built-in with IRouterErrorHandler |

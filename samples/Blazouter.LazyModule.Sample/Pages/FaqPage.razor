@@ -1,0 +1,39 @@
+<div class="px-4 py-16">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">FAQ</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+            This page was loaded from a <strong>lazy-loaded RCL</strong> using the <code>ComponentLoader</code> approach.
+        </p>
+        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4 mb-4">
+            <p class="text-purple-700 dark:text-purple-300 font-semibold">
+                Lazy assembly loading with ComponentLoader is working correctly!
+            </p>
+        </div>
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-2">How it works</h2>
+            <ul class="list-disc list-inside text-blue-700 dark:text-blue-400 space-y-1">
+                <li>This component lives in <code>Blazouter.LazyModule.Sample</code> assembly</li>
+                <li>The assembly is marked with <code>&lt;BlazorWebAssemblyLazyLoad&gt;</code></li>
+                <li><code>ComponentLoader</code> loads the assembly and returns the component type directly</li>
+                <li>No <code>[Route]</code> attribute needed — the route is defined explicitly in <code>RouteConfig</code></li>
+            </ul>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-300 mb-3">Comparison</h2>
+            <div class="grid gap-3 md:grid-cols-2">
+                <div class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-1 text-sm">OnNavigateAsync + AdditionalAssemblies</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs">
+                        Routes discovered automatically via <code>[Route]</code> attributes. Used by Support and Help pages.
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-gray-700 border border-purple-300 dark:border-purple-600 rounded-lg p-3">
+                    <h3 class="font-semibold text-purple-700 dark:text-purple-300 mb-1 text-sm">ComponentLoader (this page)</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-xs">
+                        Route defined explicitly. Assembly loaded inside the loader lambda. No attribute scanning needed.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -427,6 +427,15 @@ namespace Blazouter.Components
         private bool _isLoading = false;
 
         /// <summary>
+        /// Indicates whether a ComponentLoader is actively executing.
+        /// This prevents concurrent ComponentLoader invocations caused by re-renders
+        /// (via StateHasChanged → OnParametersSetAsync → UpdateRoute) while a ComponentLoader
+        /// is awaiting its async load, which would result in duplicate fetch calls and
+        /// "body stream already read" errors in WebAssembly lazy assembly loading.
+        /// </summary>
+        private bool _isLoadingComponent = false;
+
+        /// <summary>
         /// Indicates whether an error has occurred during routing
         /// </summary>
         private bool _hasError = false;
@@ -718,7 +727,18 @@ namespace Blazouter.Components
                     return;
                 }
 
+                // If a ComponentLoader is already executing, skip this invocation to prevent
+                // concurrent loads. This happens when StateHasChanged() below triggers a re-render
+                // that calls OnParametersSetAsync → UpdateRoute() while LoadComponentWithCacheAsync
+                // is still awaiting. Without this guard, duplicate fetch calls for the same .wasm
+                // assembly can cause "body stream already read" errors in WebAssembly lazy loading.
+                if (_isLoadingComponent)
+                {
+                    return;
+                }
+
                 _isLoading = true;
+                _isLoadingComponent = true;
 
                 // The layout will stay rendered with its current state
 
@@ -731,6 +751,7 @@ namespace Blazouter.Components
                 catch (Exception ex)
                 {
                     _isLoading = false;
+                    _isLoadingComponent = false;
                     await HandleRoutingError(ex, RouterErrorType.ComponentLoading,
                         _currentPath, matchToLoad.Route.Path, null);
                     return;
@@ -738,6 +759,7 @@ namespace Blazouter.Components
                 finally
                 {
                     _isLoading = false;
+                    _isLoadingComponent = false;
                 }
             }
 

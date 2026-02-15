@@ -13,7 +13,7 @@ namespace Blazouter.WebAssembly.Sample.Layouts
         // Examples dropdown pages
         private static readonly string[] ExamplesPages = new[]
         {
-            "/users", "/protected", "/lazy", "/error-example"
+            "/users", "/protected", "/lazy", "/support", "/help", "/error-example"
         };
 
         private void ToggleMobileMenu()

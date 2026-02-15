@@ -605,9 +605,12 @@ new RouteConfig
     {
         if (context.Path.StartsWith("/module-page", StringComparison.OrdinalIgnoreCase))
         {
-            var assemblies = await AssemblyLoader.LoadAssembliesAsync(
-                ["MyModule.wasm"]);
-            _lazyLoadedAssemblies.AddRange(assemblies);
+            if (_lazyLoadedAssemblies.Count == 0)
+            {
+                var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+                    ["MyModule.wasm"]);
+                _lazyLoadedAssemblies.AddRange(assemblies);
+            }
         }
     }
 }

@@ -238,6 +238,12 @@ new RouteConfig
 **WASM RCL Assembly Lazy Loading** - Load Razor Class Library assemblies on demand:
 
 ```razor
+@using System.Reflection
+@using Blazouter.Models
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
+
+@inject LazyAssemblyLoader AssemblyLoader
+
 <Router Routes="@_routes"
         OnNavigateAsync="@OnNavigateAsync"
         AdditionalAssemblies="@_lazyLoadedAssemblies">
@@ -250,9 +256,12 @@ new RouteConfig
     {
         if (context.Path.StartsWith("/module", StringComparison.OrdinalIgnoreCase))
         {
-            var assemblies = await AssemblyLoader.LoadAssembliesAsync(
-                ["MyModule.wasm"]);
-            _lazyLoadedAssemblies.AddRange(assemblies);
+            if (_lazyLoadedAssemblies.Count == 0)
+            {
+                var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+                    ["MyModule.wasm"]);
+                _lazyLoadedAssemblies.AddRange(assemblies);
+            }
         }
     }
 }

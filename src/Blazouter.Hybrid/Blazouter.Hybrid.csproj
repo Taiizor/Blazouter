@@ -89,7 +89,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub">
-            <Version>8.0.0</Version>
+            <Version>11.0.100-preview.1.26104.118</Version>
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
     </ItemGroup>
@@ -100,7 +100,7 @@
 
     <ItemGroup>
         <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.Maui.Controls" Version="9.0.120" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.Maui.Controls" Version="10.0.20" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.Maui.Controls" Version="10.0.40" />
     </ItemGroup>
 
     <ItemGroup>

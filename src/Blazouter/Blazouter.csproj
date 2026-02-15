@@ -73,7 +73,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub">
-            <Version>8.0.0</Version>
+            <Version>11.0.100-preview.1.26104.118</Version>
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
     </ItemGroup>
@@ -81,9 +81,9 @@
     <ItemGroup>
         <PackageReference Condition="$(TargetFramework.StartsWith('net6'))" Include="Microsoft.AspNetCore.Components.Web" Version="6.0.36" />
         <PackageReference Condition="$(TargetFramework.StartsWith('net7'))" Include="Microsoft.AspNetCore.Components.Web" Version="7.0.20" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net8'))" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.22" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.AspNetCore.Components.Web" Version="9.0.11" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.AspNetCore.Components.Web" Version="10.0.1" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net8'))" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.24" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.AspNetCore.Components.Web" Version="9.0.13" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.AspNetCore.Components.Web" Version="10.0.3" />
     </ItemGroup>
 
     <ItemGroup>

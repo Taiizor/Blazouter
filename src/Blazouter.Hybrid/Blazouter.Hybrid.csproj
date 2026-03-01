@@ -99,7 +99,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.Maui.Controls" Version="9.0.120" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.Maui.Controls" Version="10.0.41" />
         <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.Maui.Controls" Version="10.0.41" />
     </ItemGroup>
 

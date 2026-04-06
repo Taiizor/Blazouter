@@ -21,7 +21,7 @@ jobs:
             Release
         ]
         solution: [
-            Blazouter.sln
+            Blazouter.slnx
         ]
 
     steps:

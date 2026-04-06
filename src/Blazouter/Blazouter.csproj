@@ -32,7 +32,7 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
         <ApplicationIcon>Resources\Blazouter.ico</ApplicationIcon>
-        <Version>1.0.13</Version>
+        <Version>1.0.14</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Blazouter - React Router-like Routing for Blazor</Title>
@@ -81,9 +81,9 @@
     <ItemGroup>
         <PackageReference Condition="$(TargetFramework.StartsWith('net6'))" Include="Microsoft.AspNetCore.Components.Web" Version="6.0.36" />
         <PackageReference Condition="$(TargetFramework.StartsWith('net7'))" Include="Microsoft.AspNetCore.Components.Web" Version="7.0.20" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net8'))" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.24" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.AspNetCore.Components.Web" Version="9.0.13" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.AspNetCore.Components.Web" Version="10.0.3" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net8'))" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.25" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.AspNetCore.Components.Web" Version="9.0.14" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.AspNetCore.Components.Web" Version="10.0.5" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,0 +1,27 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/samples/">
+    <Project Path="samples/Blazouter.Hybrid.Sample/Blazouter.Hybrid.Sample.csproj" />
+    <Project Path="samples/Blazouter.LazyModule.Sample/Blazouter.LazyModule.Sample.csproj" />
+    <Project Path="samples/Blazouter.Server.Sample/Blazouter.Server.Sample.csproj" />
+    <Project Path="samples/Blazouter.Web.Sample/Blazouter.Web.Client.Sample/Blazouter.Web.Client.Sample.csproj" />
+    <Project Path="samples/Blazouter.Web.Sample/Blazouter.Web.Sample/Blazouter.Web.Sample.csproj" />
+    <Project Path="samples/Blazouter.WebAssembly.Sample/Blazouter.WebAssembly.Sample.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="global.json" />
+    <File Path="NuGet.Config" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Blazouter.Hybrid/Blazouter.Hybrid.csproj" />
+    <Project Path="src/Blazouter.Server/Blazouter.Server.csproj" />
+    <Project Path="src/Blazouter.Web/Blazouter.Web.csproj" />
+    <Project Path="src/Blazouter.WebAssembly/Blazouter.WebAssembly.csproj" />
+    <Project Path="src/Blazouter/Blazouter.csproj" />
+  </Folder>
+</Solution>

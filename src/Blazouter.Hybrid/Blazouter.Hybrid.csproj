@@ -48,7 +48,7 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
         <ApplicationIcon>Resources\Blazouter.ico</ApplicationIcon>
-        <Version>1.0.13</Version>
+        <Version>1.0.14</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Blazouter.Hybrid - MAUI/Hybrid Routing Extensions</Title>
@@ -100,7 +100,7 @@
 
     <ItemGroup>
         <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.Maui.Controls" Version="9.0.120" />
-        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.Maui.Controls" Version="10.0.41" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.Maui.Controls" Version="10.0.51" />
     </ItemGroup>
 
     <ItemGroup>

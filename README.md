@@ -63,7 +63,7 @@ Blazouter provides specialized packages for each Blazor hosting model:
 |---------|-------------|-------------------|
 | **[Blazouter](https://www.nuget.org/packages/Blazouter/)** | Core routing library | net6.0, net7.0, net8.0, net9.0, net10.0 |
 | **[Blazouter.Server](https://www.nuget.org/packages/Blazouter.Server/)** | Blazor Server extensions | net8.0, net9.0, net10.0 |
-| **[Blazouter.Hybrid](https://www.nuget.org/packages/Blazouter.Hybrid/)** | Blazor Hybrid/MAUI extensions | net9.0, net10.0 (iOS, Android, macOS, Windows) |
+| **[Blazouter.Hybrid](https://www.nuget.org/packages/Blazouter.Hybrid/)** | Blazor Hybrid/MAUI extensions | net10.0 (iOS, Android, macOS, Windows) |
 | **[Blazouter.WebAssembly](https://www.nuget.org/packages/Blazouter.WebAssembly/)** | Blazor WebAssembly extensions | net6.0, net7.0, net8.0, net9.0, net10.0 |
 
 > **Note:** The `Blazouter.Web` package has been deprecated. For Blazor Web Applications, use `Blazouter.Server` for the server project and `Blazouter.WebAssembly` for the client project.
@@ -1115,7 +1115,7 @@ dotnet run
 
 ```bash
 cd samples/Blazouter.Hybrid.Sample
-dotnet build -t:Run -f net9.0-windows10.0.19041.0
+dotnet build -t:Run -f net10.0-windows10.0.19041.0
 ```
 
 **Blazor Web Sample (.NET 8+ with Server + WASM):**

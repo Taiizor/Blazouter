@@ -378,7 +378,6 @@ private void SearchItems(string query)
 
 ## Target Frameworks
 
-- .NET 9.0 (iOS, Android, macOS Catalyst, Windows)
 - .NET 10.0 (iOS, Android, macOS Catalyst, Windows)
 
 ## Example Application

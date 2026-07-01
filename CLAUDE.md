@@ -35,7 +35,7 @@ There are no tests in this repository. CI only runs `dotnet build` in Release mo
 - Core library (`Blazouter`) multi-targets: net6.0, net7.0, net8.0, net9.0, net10.0
 - `Blazouter.Server` and `Blazouter.Web` target: net8.0, net9.0, net10.0
 - `Blazouter.WebAssembly` targets: net6.0, net7.0, net8.0, net9.0, net10.0
-- `Blazouter.Hybrid` targets: net9.0 and net10.0 (iOS, Android, macOS, Windows via MAUI)
+- `Blazouter.Hybrid` targets: net10.0 only (iOS, Android, macOS, Windows via MAUI)
 - All projects use `LangVersion=preview` and `Nullable=enable`
 
 ## Architecture
